@@ -67,73 +67,107 @@ Rename the Worksheet by clicking on the auto-generated Timestamp name and inputt
 
 ### Step 0.2 Set Up
 
-#### Define and Validate SQL variables 
-
-In order to create lab objects we will need first to set USER_NUMBER [SQL variable](https://docs.snowflake.com/en/sql-reference/session-variables).
-The user number is the number we will extract using regular expression from current user.
-
-For example when using HYBRID_HOL_USER_6 for the user login in this lab, the user number is 6.
-The result of running "SELECT $USER_NUMBER" statement should be 6:
-
-
-![Screenshot 2023-10-17 at 9 25 45](https://github.com/snowflakecorp/techup-fy24snowday-hybrid_tables/assets/132544324/166e7cb3-4c51-41ff-b447-c76b7d766e1e)
-
-
-First We will extract USER_NUMBER from current user using [REGEXP_SUBSTR](https://docs.snowflake.com/en/sql-reference/functions/regexp_substr) and [CURRENT_USERS](https://docs.snowflake.com/en/sql-reference/functions/current_user) functions, set USER_NUMBER variable and view variable value.
-```sql
--- Lab 0
--- Set lab context
-USE ROLE ACCOUNTADMIN;
-USE WAREHOUSE HYBRID_QUERY_WH;
-
--- Extract USER_NUMBER from current user and set USER_NUMBER variable
-SET USER_NUMBER = (SELECT REGEXP_SUBSTR(CURRENT_USER(), '[0-9]{1,3}'));
---To view and validate USER_NUMBER variable
-SELECT $USER_NUMBER;
-```
-
-Next we will create 3 new variables that we will use to create next objects and validate variables values using select statement.
-
-For example when using HYBRID_HOL_USER_6 for the user login in this lab, the result of running "SELECT $USER_ROLE AS MAIN_LAB_USER_ROLE,$USER_WAREHOUSE AS LAB_USER_WAREHOUSE,$USER_DATABASE AS LAB_USER_DATABASE;" statement should be:
-
-![Screenshot 2023-10-17 at 9 24 04](https://github.com/snowflakecorp/techup-fy24snowday-hybrid_tables/assets/132544324/9ec47e28-0e81-458e-8b83-fe6a518c0bc2)
-
-```sql
--- Set USER_ROLE, USER_WAREHOUSE and USER_DATABASE variables
-SET USER_ROLE = 'HYBRID_HOL_USER_'||$USER_NUMBER||'_ROLE';
-SET USER_WAREHOUSE = 'HYBRID_QUERY_USER_'||$USER_NUMBER||'_WH';
-SET USER_DATABASE = 'HYBRID_DB_USER_'||$USER_NUMBER;
-
--- To view variables values
-SELECT $USER_ROLE AS MAIN_LAB_USER_ROLE,$USER_WAREHOUSE AS LAB_USER_WAREHOUSE,$USER_DATABASE AS LAB_USER_DATABASE;
-```
-**IMPORTANT**: <br>
-Please note that If any of the validation checks fail before you proceed to the next steps, please seek assistance from one of the HOL helpers.
-
-
 #### Create lab objects
 
-Next we will create HYBRID_HOL_USER_(USER_NUMBER)_ROLE role, HYBRID_QUERY_USER_(USER_NUMBER)_WH warehouse and HYBRID_DB_USER_(USER_NUMBER) database using the SQL variables we created in previous step.
+Next we will create HYBRID_QUICKSTART_ROLE role, HYBRID_QUICKSTART_WH warehouse and HYBRID_QUICKSTART_DB database.
 
 ```sql
+USE ROLE ACCOUNTADMIN;
+CREATE OR REPLACE ROLE HYBRID_QUICKSTART_ROLE;
 -- Use role and create new user warehouse
-USE ROLE IDENTIFIER($USER_ROLE);
-CREATE WAREHOUSE IDENTIFIER($USER_WAREHOUSE) WAREHOUSE_SIZE = XSMALL, AUTO_SUSPEND = 300, AUTO_RESUME= TRUE;
-GRANT OWNERSHIP ON WAREHOUSE IDENTIFIER($USER_WAREHOUSE) TO ROLE IDENTIFIER($USER_ROLE);
+USE ROLE HYBRID_QUICKSTART_ROLE;
+CREATE WAREHOUSE HYBRID_QUICKSTART_WH WAREHOUSE_SIZE = XSMALL, AUTO_SUSPEND = 300, AUTO_RESUME= TRUE;
+GRANT OWNERSHIP ON WAREHOUSE HYBRID_QUICKSTART_WH TO ROLE HYBRID_QUICKSTART_ROLE;
 ```
-In this lab we will use two databases:
-- HYBRID_DB - This database holds all the big scale data. It is created once, in the pre-setup step, for each account and is shared by all account users.
-- HYBRID_DB_USER_(USER_NUMBER) - This database will be created by each user during the lab.
-
-Each database will be used for executing certain lab steps.
-
-Next we will create HYBRID_DB_USER_(USER_NUMBER) database and schema.
-
+Next we will create HYBRID_QUICKSTART_DB database and schema.
 ```sql
 -- We will create a database and schema that will house some of the tables that store our data.
-CREATE DATABASE IDENTIFIER($USER_DATABASE);
+CREATE DATABASE HYBRID_QUICKSTART_DB;
 CREATE SCHEMA DATA;
 ```
+#### Create Hybrid Table and Bulk Load Data
+
+You may bulk load data into hybrid tables by copying from a data stage or other tables (that is, using CTAS, COPY, or INSERT INTO … SELECT). Other methods of loading data into Snowflake tables (for example, Snowpipe) are not currently supported.
+
+It is strongly recommended to bulk load data into a hybrid table using a CREATE TABLE … AS SELECT statement, as there are several optimizations which can only be applied to a data load as part of table creation. You need to define all keys, indexes, and constraints at the creation of a hybrid table. 
+
+This DDL will create the structure for the ORDER_HEADER hybrid table
+Note the primary key constraint on ORDER_ID column.
+
+```sql
+-- Set lab context use HYBRID_DB_USER_(USER_NUMBER) database and DATA schema
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
+create or replace HYBRID TABLE ORDER_HEADER (
+	ORDER_ID NUMBER(38,0) NOT NULL,
+	TRUCK_ID NUMBER(38,0),
+	LOCATION_ID NUMBER(19,0),
+	CUSTOMER_ID NUMBER(38,0),
+	SHIFT NUMBER(38,0),
+	SHIFT_START_TIME TIME(9),
+	SHIFT_END_TIME TIME(9),
+	ORDER_CHANNEL VARCHAR(16777216),
+	ORDER_TS TIMESTAMP_NTZ(9),
+	SERVED_TS VARCHAR(16777216),
+	ORDER_CURRENCY VARCHAR(3),
+	ORDER_AMOUNT NUMBER(38,4),
+	ORDER_TAX_AMOUNT VARCHAR(16777216),
+	ORDER_DISCOUNT_AMOUNT VARCHAR(16777216),
+	ORDER_TOTAL NUMBER(38,4),
+	ORDER_STATUS VARCHAR(16777216) DEFAULT 'INQUEUE',
+	primary key (ORDER_ID) rely ,
+	foreign key (TRUCK_ID) references FROSTBYTE_TASTY_BYTES_UNISTORE.RAW_POS.TRUCK(TRUCK_ID) rely ,
+	foreign key (LOCATION_ID) references FROSTBYTE_TASTY_BYTES_UNISTORE.RAW_POS.LOCATION(LOCATION_ID) rely ,
+	foreign key (CUSTOMER_ID) references FROSTBYTE_TASTY_BYTES_UNISTORE.RAW_CUSTOMER.CUSTOMER_LOYALTY(CUSTOMER_ID) rely ,
+	index IDX01_ORDER_TS(ORDER_TS),
+	index IDX02_ORDER_STATUS(ORDER_STATUS),
+	index IDX02_SHIFT(SHIFT)
+)
+AS
+  (SELECT
+     ORDER_ID,
+     TRUCK_ID,
+     LOCATION_ID,
+     CUSTOMER_ID,
+     SHIFT_START_TIME,
+     SHIFT_END_TIME),
+     ORDER_CHANNEL,
+     ORDER_TS,
+     SERVED_TS,
+     ORDER_CURRENCY,
+     ORDER_AMOUNT,
+     ORDER_TAX_AMOUNT,
+     ORDER_DISCOUNT_AMOUNT,
+     ORDER_TOTAL,
+     ORDER_STATUS,
+     FROSTBYTE_TASTY_BYTES_UNISTORE.RAW_POS.ORDER_HEADER);
+
+-- Not sure I need to grant any OWNERSHIP
+-- grant OWNERSHIP to role HYBRID_ADMIN_ROLE
+-- GRANT OWNERSHIP ON TABLE ORDER_STATE_STANDARD TO ROLE HYBRID_ADMIN_ROLE;
+-- GRANT OWNERSHIP ON TABLE TRUCK_STANDARD TO ROLE HYBRID_ADMIN_ROLE;
+-- GRANT OWNERSHIP ON SCHEMA DATA TO ROLE HYBRID_ADMIN_ROLE;
+-- GRANT OWNERSHIP ON DATABASE HYBRID_DB TO ROLE HYBRID_ADMIN_ROLE;
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Lab 1: Explore Data
 Duration: 5 Minutes
