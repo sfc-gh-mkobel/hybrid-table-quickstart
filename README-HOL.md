@@ -1,4 +1,4 @@
-# hybrid-table-quickstart
+# techup-fy24snowday-hybrid_tables
 
 # An Introduction to Hybrid Table
 <!-- ------------------------ -->
@@ -39,7 +39,7 @@ In this HOL we will use Tasty Bytes order synthetic data to simulate a data serv
 
 To complete this HOL, attendees need the following:
 - Snowflake account with Hybrid Tables Enabled
-- Account Admin and password which you should use to execute the HOL
+- Account User and password which you should use to execute the HOL
 
 **IMPORTANT**: <br>
 At TECHUP, you will be provided with an account, a user name, and a password provided by Hol Helpers so no action is necessary on your end.
@@ -47,8 +47,6 @@ At TECHUP, you will be provided with an account, a user name, and a password pro
 ### Prerequisites
 - Familiarity with the Snowflake Snowsight interface
 - Basic experience using git
-- Tasty Bytes V2 Installed on your account. If you don't have it install it by running [V2 Tasty Bytes Foundational Data Model - Setup](https://github.com/snowflakecorp/frostbytes/tree/main/Tasty%20Bytes/20%20-%20setup/V2)
-
 
 
 ## Lab 0: Lab Set Up
@@ -63,7 +61,7 @@ Within Worksheets, click the "+" button in the top-right corner of Snowsight and
 
 ![Screenshot 2023-10-03 at 13 23 58](https://github.com/snowflakecorp/techup-fy24snowday-hybrid_tables/assets/132544324/f0b2535a-30ff-4b7a-a1ef-1bf2b0b580e9)
 
-Rename the Worksheet by clicking on the auto-generated Timestamp name and inputting "Hybrid Table - QuickStart"
+Rename the Worksheet by clicking on the auto-generated Timestamp name and inputting "Hybrid Table - HOL"
 
 ### Step 0.2 Set Up
 
