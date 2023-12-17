@@ -110,6 +110,7 @@ It is strongly recommended to bulk load data into a hybrid table using a CREATE 
 This DDL will create hybrid table TRUCK using CREATE TABLE … AS SELECT statement.
 Note the primary key constraint on TRUCK_ID column.
 
+```sql
 CREATE OR REPLACE HYBRID TABLE TRUCK (
 	TRUCK_ID NUMBER(38,0) NOT NULL,
 	MENU_TYPE_ID NUMBER(38,0),
@@ -145,7 +146,7 @@ FRANCHISE_ID,
 TRUCK_OPENING_DATE
 FROM 
 FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK;
-
+```
 
 This DDL will create the structure for the ORDER_HEADER hybrid table
 Note the following:
