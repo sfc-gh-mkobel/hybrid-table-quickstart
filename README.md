@@ -263,26 +263,21 @@ select * from ORDER_HEADER limit 10;
 ```
 
 ## Lab 3: Unique and Foreign Keys Constraints
-
-
-
 ### Step 3.1 Insert Foreign Keys Constraints
 ### Step 3.2 Unique Constraints
 ### Step 3.3 Truncated Active Foreign Key Constraint
 ### Step 3.5 Delete Foreign Key Constraint
-
-## Lab 6: Row-Level Locking
-## Consistency
-## Lab 4: Join Hybrid Table
-### Step 4.1 Explore Data 
-### Step 4.2 Join Hybrid Table and Standard Table
-## Lab 5: Security / Governance
-### Step 5.1 Hybrid Table Access Control and User Management
-### Step 5.2 Hybrid Table Masking Policy
-
-## Lab 2: Execution Details - Not sure about this one???
-
-## Lab 7: Cleanup
+## Lab 4: Row-Level Locking
+## Lab 5: Consistency 
+(Multi-statement transaction include both hybrid and standard tables)
+## Lab 6: Hybrid Querying
+### Step 6.1 Explore Data 
+### Step 6.2 Join Hybrid Table and Standard Table
+## Lab 7: Security / Governance
+### Step 7.1 Hybrid Table Access Control and User Management
+### Step 7.2 Hybrid Table Masking Policy
+## Lab 8: Execution Details
+## Lab 9: Cleanup
 
 
 
