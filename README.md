@@ -216,6 +216,28 @@ insert into ORDER_HEADER (
      from FROSTBYTE_TASTY_BYTES.RAW_POS.ORDER_HEADER limit 1000;
 ```
 
+## Lab 1: Explore Data
+## Lab 2: Execution Details
+## Lab 3: Unique and Foreign Keys Constraints
+### Step 3.1 Insert Foreign Keys Constraints
+### Step 3.2 Unique Constraints
+### Step 3.3 Truncated Active Foreign Key Constraint
+### Step 3.5 Delete Foreign Key Constraint
+## Lab 4: Join Hybrid Table and Standard Snowflake Table
+### Step 4.1 Explore Data 
+### Step 4.2 Join Hybrid Table and Standard Snowflake Table
+## Lab 5: Security / Governance
+### Step 5.1 Hybrid Table Access Control and User Management
+### Step 5.2 Hybrid Table Masking Policy
+## Lab 6: row-level locking
+## Lab 7: Cleanup
+
+
+
+
+
+
+
 
 
 
