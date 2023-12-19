@@ -261,20 +261,27 @@ select * from TRUCK limit 10;
 -- Simple query to look at 10 rows of data from table ORDER_HEADER
 select * from ORDER_HEADER limit 10;
 ```
-## Lab 2: Execution Details - Not sure about this one???
+
 ## Lab 3: Unique and Foreign Keys Constraints
+
+
+
 ### Step 3.1 Insert Foreign Keys Constraints
 ### Step 3.2 Unique Constraints
 ### Step 3.3 Truncated Active Foreign Key Constraint
 ### Step 3.5 Delete Foreign Key Constraint
+
+## Lab 6: Row-Level Locking
+## Consistency
 ## Lab 4: Join Hybrid Table
 ### Step 4.1 Explore Data 
 ### Step 4.2 Join Hybrid Table and Standard Table
-### Step 4.3 Join Hybrid Table and Hybrid Table
 ## Lab 5: Security / Governance
 ### Step 5.1 Hybrid Table Access Control and User Management
 ### Step 5.2 Hybrid Table Masking Policy
-## Lab 6: Row-Level Locking
+
+## Lab 2: Execution Details - Not sure about this one???
+
 ## Lab 7: Cleanup
 
 
