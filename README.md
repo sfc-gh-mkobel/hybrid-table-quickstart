@@ -40,9 +40,6 @@ In this HOL we will use Tasty Bytes order synthetic data to simulate a data serv
 To complete this HOL, attendees need the following:
 - Snowflake account with Hybrid Tables Enabled
 - Account Admin and password which you should use to execute the HOL
-
-**IMPORTANT**: <br>
-At TECHUP, you will be provided with an account, a user name, and a password provided by Hol Helpers so no action is necessary on your end.
  
 ### Prerequisites
 - Familiarity with the Snowflake Snowsight interface
@@ -217,6 +214,53 @@ insert into ORDER_HEADER (
 ```
 
 ## Lab 1: Explore Data
+Duration: 5 Minutes
+In the previous Set Up lab we created HYBRID_QUICKSTART_ROLE role, HYBRID_QUICKSTART_WH warehouse, HYBRID_QUICKSTART_DB database and schema DATA lets use them.
+
+```sql
+-- Lab 1
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+```
+We also created and loaded data into the TRUCK and ORDER_HEADER hybrid tables. Now we can run a few queries and review some information to get familiar with it.
+
+View tables properties and metadata. Note the value of is_hybrid column.
+
+```sql
+SHOW TABLES LIKE '%TRUCK%';
+SHOW TABLES LIKE '%ORDER_STATE%';
+```
+Display information about the columns in the table. Note the primary key column and also that all three tables have table structure.
+```sql
+--Describe the columns in the table TRUCK
+DESC TABLE TRUCK;
+--Describe the columns in the table ORDER_HEADER
+DESC TABLE ORDER_HEADER;
+```
+
+View details for all hybrid tables.
+
+```sql
+--Show all HYBRID tables
+SHOW HYBRID TABLES;
+```
+
+List all the indexes in your account for which you have access privileges. Note the value of the is_unique column: for the PRIMARY KEY the value is Y and for the index the value is N.
+```sql
+--Show all HYBRID tables indexes
+SHOW INDEXES;
+```
+
+Look at a sample of the tables.
+```sql
+-- Simple query to look at 10 rows of data table TRUCK
+select * from TRUCK limit 10;
+-- Simple query to look at 10 rows of data from table ORDER_HEADER
+select * from ORDER_HEADER limit 10;
+```
 ## Lab 2: Execution Details
 ## Lab 3: Unique and Foreign Keys Constraints
 ### Step 3.1 Insert Foreign Keys Constraints
@@ -229,7 +273,7 @@ insert into ORDER_HEADER (
 ## Lab 5: Security / Governance
 ### Step 5.1 Hybrid Table Access Control and User Management
 ### Step 5.2 Hybrid Table Masking Policy
-## Lab 6: row-level locking
+## Lab 6: Row-Level Locking
 ## Lab 7: Cleanup
 
 
@@ -237,6 +281,8 @@ insert into ORDER_HEADER (
 
 
 
+<br>============ END OF QS =============<br/>
+<br><br/>
 
 
 
@@ -244,6 +290,9 @@ insert into ORDER_HEADER (
 
 
 
+
+
+# hybrid-table-HOL
 ## Lab 1: Explore Data
 Duration: 5 Minutes
 
