@@ -300,7 +300,7 @@ Now we will create new unique email address and insert a new record to table TRU
 SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com')
 insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_EMAIL);
 ```
-Statements should run successfully.
+Statement should run successfully.
 
 ### Step 3.2 Insert Foreign Keys Constraints
 
@@ -315,7 +315,7 @@ SET MAX_ORDER_ID = (SELECT MAX(ORDER_ID) FROM ORDER_HEADER);
 SET NEW_ORDER_ID = ($MAX_ORDER_ID +1);
 
 SET NONE_EXIST_TRUCK_ID = -1;
-
+-- Insert new record to table ORDER_HEADER
 insert into ORDER_HEADER values ($NEW_ORDER_ID,$NONE_EXIST_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
 ```
 The statement should fail and we should receive the following error message:
@@ -325,7 +325,7 @@ Foreign key constraint "SYS_INDEX_ORDER_HEADER_FOREIGN_KEY_TRUCK_ID_TRUCK_TRUCK_
 Now we will use the new NEW_TRUCK_ID variable we used in previous step and insert a new record to table ORDER_HEADER:
 
 ```sql
--- 
+-- Insert new record to table ORDER_HEADER
 insert into ORDER_HEADER values ($NEW_ORDER_ID,$NEW_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
 ```
 
