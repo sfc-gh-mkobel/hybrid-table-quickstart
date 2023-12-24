@@ -92,7 +92,7 @@ GRANT OWNERSHIP ON DATABASE HYBRID_QUICKSTART_DB TO ROLE HYBRID_QUICKSTART_ROLE;
 CREATE OR REPLACE SCHEMA DATA;
 GRANT OWNERSHIP ON SCHEMA HYBRID_QUICKSTART_DB.DATA TO ROLE HYBRID_QUICKSTART_ROLE;
 
--- Use role and create new user warehouse
+-- Use role
 USE ROLE HYBRID_QUICKSTART_ROLE;
 
 -- Set lab context use HYBRID_DB_USER_(USER_NUMBER) database and DATA schema
@@ -412,6 +412,75 @@ After executing the join statement examine and analyze the data in the result se
 
 
 ## Lab 7: Security / Governance
+
+Duration: 10 Minutes
+
+In this lab, we will demonstrate that the security and governance functionalities that have been applied to the standard table are also exist for the hybrid table. 
+
+### Step 7.1 Hybrid Table Access Control and User Management
+
+Role-based access control (RBAC) in Snowflake for hybrid tables is the same as standard tables.
+The purpose of this exercise is to give you a chance to see how you can manage access to hybrid table data in Snowflake by granting privileges to some roles.
+
+First we will create a new HYBRID_QUICKSTART_BI_USER_ROLE role
+
+```sql
+-- Lab 7
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
+
+USE ROLE ACCOUNTADMIN;
+CREATE ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
+GRANT ROLE HYBRID_QUICKSTART_BI_USER_ROLE TO USER CURRENT_USER();
+```
+
+Then we will grant USAGE privileges to HYBRID_QUICKSTART_WH warehouse, HYBRID_QUICKSTART_DB database, and all its schemas to role HYBRID_QUICKSTART_BI_USER_ROLE
+
+```sql
+-- Use HYBRID_QUICKSTART_ROLE role
+USE ROLE HYBRID_QUICKSTART_ROLE;
+GRANT USAGE ON WAREHOUSE HYBRID_QUICKSTART_WH TO ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
+GRANT USAGE ON DATABASE HYBRID_QUICKSTART_DB TO ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
+GRANT USAGE ON ALL SCHEMAS IN DATABASE HYBRID_QUICKSTART_DB TO HYBRID_QUICKSTART_BI_USER_ROLE;
+```
+
+Use the newly created role and try to select some data from ORDER_STATE_HYBRID hybrid table
+
+```sql
+-- Use HYBRID_QUICKSTART_BI_USER_ROLE role
+USE ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
+-- Use HYBRID_QUICKSTART_BI_USER_ROLE database
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
+select * from ORDER_HEADER limit 10;
+```
+We’re not able to select any data. That’s because the role HYBRID_QUICKSTART_BI_USER_ROLE has not been granted the necessary privileges.
+
+Use role HYBRID_QUICKSTART_ROLE and grant role HYBRID_QUICKSTART_BI_USER_ROLE select privileges on table ORDER_HEADER.
+
+```sql
+-- Use HYBRID_QUICKSTART_ROLE role
+USE ROLE HYBRID_QUICKSTART_ROLE;
+GRANT SELECT ON TABLE ORDER_HEADER TO ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
+```
+
+Try again to select some data from ORDER_STATE_HYBRID hybrid table
+
+```sql
+-- Use HYBRID_QUICKSTART_BI_USER_ROLE role
+USE ROLE IDENTIFIER($BI_USER_ROLE);
+select * from ORDER_HEADER limit 10;
+```
+
+This time it worked! This is because HYBRID_QUICKSTART_BI_USER_ROLE role has the appropriate privileges at all levels of the hierarchy.
+
+
+
 ### Step 7.1 Hybrid Table Access Control and User Management
 ### Step 7.2 Hybrid Table Masking Policy
 ## Lab 8: Execution Details
