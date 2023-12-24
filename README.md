@@ -479,9 +479,6 @@ select * from ORDER_HEADER limit 10;
 
 This time it worked! This is because HYBRID_QUICKSTART_BI_USER_ROLE role has the appropriate privileges at all levels of the hierarchy.
 
-
-
-### Step 7.1 Hybrid Table Access Control and User Management
 ### Step 7.2 Hybrid Table Masking Policy
 ## Lab 8: Execution Details
 ## Lab 9: Cleanup
