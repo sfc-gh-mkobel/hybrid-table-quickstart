@@ -265,6 +265,9 @@ select * from ORDER_HEADER limit 10;
 ```
 
 ## Lab 3: Unique and Foreign Keys Constraints
+Duration: 10 Minutes
+
+In this part of the lab, we will test Unique and Foreign Keys Constraints.
 
 ### Step 3.1 Unique Constraints
 In this step, we will test Unique Constraint which ensures that all values in a column are different.
@@ -358,7 +361,7 @@ DELETE TRUCK WHERE TRUCK_ID = $EXIST_TRUCK_ID;
 The statement should fail and we should receive the following error message:
 "Foreign keys that reference key values still exist."
 
-In order to be able to delete a record referenced by a foreign key constraint you need first to delete the reference record in table ORDER_HEADER and only then delete the referenced by record in table TRUCK
+In order to be able to delete a record referenced by a foreign key constraint you need first to delete the reference record in table ORDER_HEADER and only then delete the referenced by record in table TRUCK.
 To test it run the following statement:
 
 ```sql
