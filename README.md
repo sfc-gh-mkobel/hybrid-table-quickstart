@@ -123,6 +123,7 @@ CREATE OR REPLACE HYBRID TABLE TRUCK (
 	EV_FLAG NUMBER(38,0),
 	FRANCHISE_ID NUMBER(38,0),
 	TRUCK_OPENING_DATE DATE,
+        TRUCK_EMAIL VARCHAR NOT NULL UNIQUE,
 	primary key (TRUCK_ID) rely 
 )
 AS
@@ -140,7 +141,8 @@ MAKE,
 MODEL,
 EV_FLAG,
 FRANCHISE_ID,
-TRUCK_OPENING_DATE
+TRUCK_OPENING_DATE,
+CONCAT(TRUCK_ID, '_truck@email.com')
 FROM 
 FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK;
 ```
@@ -263,8 +265,36 @@ select * from ORDER_HEADER limit 10;
 ```
 
 ## Lab 3: Unique and Foreign Keys Constraints
+
 ### Step 3.1 Insert Foreign Keys Constraints
 ### Step 3.2 Unique Constraints
+In this step, we will test Unique Constraint which ensures that all values in a column are different.
+In table TRUCK that we created in the Set Up lab we defined column TRUCK_EMAIL as NOT NULL and UNIQUE.
+Display information about the columns in the table. Note the unique key value for TRUCK_EMAIL column.
+
+```sql
+--Describe the columns in the table TRUCK
+DESC TABLE TRUCK;
+```
+
+Due to the unique constraint, if we attempt to insert two records with the same email address, the statement will fail.
+To test it run the following statement:
+
+```sql
+-- select one of the existing email addresses
+SET TRUCK_EMAIL = (SELECT TRUCK_EMAIL FROM TRUCK LIMIT 1);
+-- Since TRUCK_ID is a primary key we need to calculate a new primary key value in order not to fail on the "Primary key already exists" error.
+SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
+--Increment max truck_id by one
+SET NEW_TRUCK_ID = CAST((CAST(MAX_TRUCK_ID AS INTEGER)+1) AS VARCHAR(4))
+insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$TRUCK_EMAIL);
+```
+
+Since we configured the column TRUCK_EMAIL in table TRUCK as UNIQUE the statement failed and we should receive the following error message:
+"Duplicate key value violates unique constraint "SYS_INDEX_TRUCK_UNIQUE_TRUCK_EMAIL""
+
+
+
 ### Step 3.3 Truncated Active Foreign Key Constraint
 ### Step 3.5 Delete Foreign Key Constraint
 ## Lab 4: Row-Level Locking
