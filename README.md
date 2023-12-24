@@ -329,7 +329,7 @@ Now we will use the new NEW_TRUCK_ID variable we used in previous step and inser
 insert into ORDER_HEADER values ($NEW_ORDER_ID,$NEW_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
 ```
 
-Both statements should run successfully.
+Statement should run successfully.
 
 
 
