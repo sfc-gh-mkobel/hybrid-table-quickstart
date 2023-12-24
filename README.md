@@ -290,7 +290,7 @@ SET TRUCK_EMAIL = (SELECT TRUCK_EMAIL FROM TRUCK LIMIT 1);
 -- Since TRUCK_ID is a primary key we need to calculate a new primary key value in order not to fail on the "Primary key already exists" error.
 SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
 --Increment max truck_id by one
-SET NEW_TRUCK_ID = CAST((CAST(MAX_TRUCK_ID AS INTEGER)+1) AS VARCHAR(4))
+SET NEW_TRUCK_ID = $MAX_TRUCK_ID+1;
 insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$TRUCK_EMAIL);
 ```
 Since we configured the column TRUCK_EMAIL in table TRUCK as UNIQUE the statement failed and we should receive the following error message:
