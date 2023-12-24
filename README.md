@@ -376,8 +376,41 @@ Both statements should run successfully.
 ## Lab 5: Consistency 
 (Multi-statement transaction include both hybrid and standard tables)
 ## Lab 6: Hybrid Querying
+Duration: 5 Minutes
+In this part of the lab, we will test the join between hybrid and standard tables. We will use FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK standard table and we will use it to join with table ORDER_HEADER.
+
 ### Step 6.1 Explore Data 
+
+In the Set Up lab, we already crated and loaded data into the ORDER_HEADER tables. Now we can run a few queries and review some information to get familiar with it.
+```sql
+-- Lab 6
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
+-- Simple query to look at 10 rows of data from standard table FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK
+select * from FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK limit 10;
+-- Simple query to look at 10 rows of data from hybrid table ORDER_HEADER
+select * from ORDER_HEADER limit 10;
+```
 ### Step 6.2 Join Hybrid Table and Standard Table
+
+In order to test the join of the hybrid table ORDER_HEADER with the standard table FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK, let's run the join statement.
+
+```sql
+-- Set ORDER_ID variable
+set ORDER_ID = (select order_id from ORDER_HEADER limit 1);
+
+-- Join tables ORDER_STATE_HYBRID and TRUCK_STANDARD
+select HY.*,ST.* from ORDER_HEADER as HY join FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK as ST on HY.truck_id = ST.TRUCK_ID where HY.ORDER_ID = $ORDER_ID;
+```
+
+After executing the join statement examine and analyze the data in the result set.
+
+
+
 ## Lab 7: Security / Governance
 ### Step 7.1 Hybrid Table Access Control and User Management
 ### Step 7.2 Hybrid Table Masking Policy
