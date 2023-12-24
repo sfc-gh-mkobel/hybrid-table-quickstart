@@ -266,38 +266,7 @@ select * from ORDER_HEADER limit 10;
 
 ## Lab 3: Unique and Foreign Keys Constraints
 
-### Step 3.1 Insert Foreign Keys Constraints
-
-In this step we will test foreign Keys constraint.
-First, we will try to insert a new record to table ORDER_HEADER. 
-It is expected that the insert statement would fail since TRUCK table does not contain a record with truck_id , which is the foreign key reference.
-
-```sql
--- Since ORDER_ID is a primary key we need to calculate a new primary key value in order not to fail on the "Primary key already exists" error.
-SET MAX_ORDER_ID = (SELECT MAX(ORDER_ID) FROM ORDER_HEADER);
---Increment max ORDER_ID by one
-SET NEW_ORDER_ID = ($MAX_ORDER_ID +1);
-
-SET NONE_EXIST_TRUCK_ID = -1;
-
-insert into ORDER_HEADER values ($NEW_ORDER_ID,$NONE_EXIST_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
-```
-The statement should fail and we should receive the following error message:
-
-Foreign key constraint "SYS_INDEX_ORDER_HEADER_FOREIGN_KEY_TRUCK_ID_TRUCK_TRUCK_ID" is violated.
-
-Now we will first select existing TRUCK_ID and use it to insert a new record to table ORDER_HEADER:
-
-```sql
-SET EXIST_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
-insert into ORDER_HEADER values ($NEW_ORDER_ID,$EXIST_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
-```
-
-Both statements should run successfully.
-
-
-
-### Step 3.2 Unique Constraints
+### Step 3.1 Unique Constraints
 In this step, we will test Unique Constraint which ensures that all values in a column are different.
 In table TRUCK that we created in the Set Up lab we defined column TRUCK_EMAIL as NOT NULL and UNIQUE.
 
@@ -321,14 +290,85 @@ SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
 SET NEW_TRUCK_ID = CAST((CAST(MAX_TRUCK_ID AS INTEGER)+1) AS VARCHAR(4))
 insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$TRUCK_EMAIL);
 ```
-
 Since we configured the column TRUCK_EMAIL in table TRUCK as UNIQUE the statement failed and we should receive the following error message:
 "Duplicate key value violates unique constraint "SYS_INDEX_TRUCK_UNIQUE_TRUCK_EMAIL""
+
+Now we will create new unique email address and insert a new record to table TRUCK:
+
+```sql
+- Create new unique email address
+SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com')
+insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_EMAIL);
+```
+Statements should run successfully.
+
+### Step 3.2 Insert Foreign Keys Constraints
+
+In this step we will test foreign Keys constraint.
+First, we will try to insert a new record to table ORDER_HEADER. 
+It is expected that the insert statement would fail since TRUCK table does not contain a record with truck_id , which is the foreign key reference.
+
+```sql
+-- Since ORDER_ID is a primary key we need to calculate a new primary key value in order not to fail on the "Primary key already exists" error.
+SET MAX_ORDER_ID = (SELECT MAX(ORDER_ID) FROM ORDER_HEADER);
+--Increment max ORDER_ID by one
+SET NEW_ORDER_ID = ($MAX_ORDER_ID +1);
+
+SET NONE_EXIST_TRUCK_ID = -1;
+
+insert into ORDER_HEADER values ($NEW_ORDER_ID,$NONE_EXIST_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
+```
+The statement should fail and we should receive the following error message:
+
+Foreign key constraint "SYS_INDEX_ORDER_HEADER_FOREIGN_KEY_TRUCK_ID_TRUCK_TRUCK_ID" is violated.
+
+Now we will use the new NEW_TRUCK_ID variable we used in previous step and insert a new record to table ORDER_HEADER:
+
+```sql
+-- 
+insert into ORDER_HEADER values ($NEW_ORDER_ID,$NEW_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
+```
+
+Both statements should run successfully.
 
 
 
 ### Step 3.3 Truncated Active Foreign Key Constraint
-### Step 3.5 Delete Foreign Key Constraint
+
+In this step, we will test that the table referenced by a foreign key constraint cannot be truncated as long as the foreign key relationship exists.
+To test it run the following statement:
+
+```sql
+TRUNCATE TABLE TRUCK;
+```
+
+The statement should fail and we should receive the following error message:
+"391458 (0A000): Hybrid table 'TRUCK' cannot be truncated as it is involved in active foreign key constraints."
+
+### Step 3.4 Delete Foreign Key Constraint
+
+In this step, we will test that a record referenced by a foreign key constraint cannot be deleted as long as the foreign key reference relationship exists.
+
+To test it run the following statement:
+
+```sql
+DELETE TRUCK WHERE TRUCK_ID = $EXIST_TRUCK_ID;
+```
+
+The statement should fail and we should receive the following error message:
+"Foreign keys that reference key values still exist."
+
+In order to be able to delete a record referenced by a foreign key constraint you need first to delete the reference record in table ORDER_HEADER and only then delete the referenced by record in table TRUCK
+To test it run the following statement:
+
+```sql
+DELETE FROM ORDER_HEADER WHERE ORDER_ID = $NEW_ORDER_ID;
+DELETE FROM TRUCK WHERE TRUCK_ID = $NEW_TRUCK_ID;
+```
+
+Both statements should run successfully.
+
+
 ## Lab 4: Row-Level Locking
 ## Lab 5: Consistency 
 (Multi-statement transaction include both hybrid and standard tables)
