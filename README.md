@@ -25,7 +25,7 @@ Hybrid tables may be suitable for some transactional applications, depending on 
 
 Hybrid tables provide the lower latency and higher throughput for single-row DMLs necessary for these use cases.
 
-In this HOL we will use Tasty Bytes order synthetic data to simulate a data serving use case. Each record in these datasets represents the state of a truck order.
+In this quickstart we will use Tasty Bytes order synthetic data to simulate a data serving use case. Each record in these datasets represents the state of a truck order.
 
 
 ### What You’ll Learn
@@ -37,9 +37,9 @@ In this HOL we will use Tasty Bytes order synthetic data to simulate a data serv
 
 ### What You’ll Need
 
-To complete this HOL, attendees need the following:
+To complete this quickstart, attendees need the following:
 - Snowflake account with Hybrid Tables Enabled
-- Account Admin and password which you should use to execute the HOL
+- Account Admin and password which you should use to execute the quickstart
  
 ### Prerequisites
 - Familiarity with the Snowflake Snowsight interface
