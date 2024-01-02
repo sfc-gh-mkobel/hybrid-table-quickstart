@@ -378,7 +378,7 @@ locking hybrid tables unlike standard tables uses row level locking for update o
 In this lab, we will test concurrent updates to different records.
 In order to test it we will run concurrent updates on two different records in the hybrid table ORDER_HEADER. We will use the main worksheet "Hybrid Table - QuickStart" we created in lab 0 and will create a new worksheet "Hybrid Table - QuickStart session 2" to simulate a new session. From the "Hybrid Table - QuickStart" worksheet we will start a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, and run an update DML statement. Before running the [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction statement we will open "Hybrid Table - QuickStart session 2" worksheet and run another update DML statement. finally we will commit the open transaction.
 
-### Step 0.1 Creating a New Worksheet
+### Step 4.1 Creating a New Worksheet
 
 Within Worksheets, click the "+" button in the top-right corner of Snowsight and choose "SQL Worksheet"
 
@@ -386,10 +386,47 @@ Within Worksheets, click the "+" button in the top-right corner of Snowsight and
 
 Rename the Worksheet by clicking on the auto-generated Timestamp name and inputting "Hybrid Table - QuickStart session 2"
 
-### Step 0.1 Running concurrent updates
+### Step 4.2 Running concurrent updates
 
+First Open "Hybrid Table - QuickStart" worksheet the start new transaction and run update DMT statement.
 
+```sql
+-- Lab 4
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
 
+begin;
+UPDATE ORDER_HEADER
+SET order_status = 'COMPLETED'
+WHERE order_id = 87311436;
+```
+Note that we didn't commit the transaction so now there is an open lock on the record WHERE order_id = 87311436.
+
+Open "Hybrid Table - QuickStart session 2" and run the update DML statement:
+
+```sql
+-- Lab 4
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
+UPDATE ORDER_HEADER
+SET order_status = 'COMPLETED'
+WHERE order_id = 403869687;
+```
+Note that the order_id in the second update DML statment is different from the first update DML statement.
+Update statement should run successfully.
+
+Open "Hybrid Table - QuickStart '' worksheet and run a commit statement to commit the open transaction.
+
+```sql
+commit;
+```
 
 ## Lab 5: Consistency 
 Duration: 5 Minutes
