@@ -380,14 +380,14 @@ Duration: 5 Minutes
 
 In this lab, we will demonstrate a unique feature that shows how we can run natively, easily and effectively multi-statement operation in one consistent atomic transaction across both hybrid and standard table types. 
 
-To test it we will start a new transaction using [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement and insert new truck record both to TRUCK hybrid table and FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK standard table and [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction.
+First we will create a new TRUCK_STANDARD table and then start a new transaction using [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, insert new truck record both to TRUCK hybrid table and TRUCK_STANDARD standard table and [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction.
 
 ### Step 5.1 Create Table
 
 This DDL will create standard table TRUCK_STANDARD using CREATE TABLE … AS SELECT statement from hybrid table TRUCK.
 
 ```sql
--- Lab 6
+-- Lab 5
 -- Set lab context
 USE ROLE HYBRID_QUICKSTART_ROLE;
 USE WAREHOUSE HYBRID_QUICKSTART_WH;
@@ -432,7 +432,7 @@ FROM
 TRUCK;
 ```
 
-### Step 5.1 Run Multi Statement Transaction
+### Step 5.2 Run Multi Statement Transaction
 
 
 ```sql
