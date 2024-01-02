@@ -377,7 +377,8 @@ Both statements should run successfully.
 (Multi-statement transaction include both hybrid and standard tables)
 ## Lab 6: Hybrid Querying
 Duration: 5 Minutes
-In this part of the lab, we will test the join between hybrid and standard tables. We will use FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK standard table and we will use it to join with table ORDER_HEADER.
+
+In this lab, we will test the join between hybrid and standard tables. We will use FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK standard table and we will use it to join with table ORDER_HEADER.
 
 ### Step 6.1 Explore Data 
 
@@ -409,15 +410,17 @@ select HY.*,ST.* from ORDER_HEADER as HY join FROSTBYTE_TASTY_BYTES.RAW_POS.TRUC
 
 After executing the join statement examine and analyze the data in the result set.
 
+## Lab 7: Execution Details
 
 
-## Lab 7: Security / Governance
+
+## Lab 8: Security / Governance
 
 Duration: 10 Minutes
 
 In this lab, we will demonstrate that the security and governance functionalities that have been applied to the standard table are also exist for the hybrid table. 
 
-### Step 7.1 Hybrid Table Access Control and User Management
+### Step 8.1 Hybrid Table Access Control and User Management
 
 Role-based access control (RBAC) in Snowflake for hybrid tables is the same as standard tables.
 The purpose of this exercise is to give you a chance to see how you can manage access to hybrid table data in Snowflake by granting privileges to some roles.
@@ -479,7 +482,7 @@ select * from ORDER_HEADER limit 10;
 
 This time it worked! This is because HYBRID_QUICKSTART_BI_USER_ROLE role has the appropriate privileges at all levels of the hierarchy.
 
-### Step 7.2 Hybrid Table Masking Policy
+### Step 8.2 Hybrid Table Masking Policy
 
 In this step, we will create a new masking policy object and apply the masking policy to a column TRUCK_EMAIL in a table TRUCK using an ALTER TABLE … ALTER COLUMN statement.
 
@@ -525,9 +528,6 @@ USE ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
 select * from TRUCK limit 10;
 ```
 
-
-
-## Lab 8: Execution Details
 ## Lab 9: Cleanup
 
 
