@@ -673,5 +673,20 @@ select * from TRUCK limit 10;
 ```
 
 ## Lab 8: Cleanup
+To clean up your Snowflake environment you can run the following SQL Statements:
 
+```sql
+-- Lab 8
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
 
+DROP DATABASE HYBRID_QUICKSTART_DB;
+DROP WAREHOUSE HYBRID_QUICKSTART_WH;
+USE ROLE ACCOUNTADMIN;
+DROP ROLE HYBRID_QUICKSTART_ROLE;
+```
+
+The last step is to manually delete "Hybrid Table - QuickStart" and "Hybrid Table - QuickStart session 2" worksheets.
