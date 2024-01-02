@@ -373,18 +373,72 @@ Both statements should run successfully.
 
 
 ## Lab 4: Row-Level Locking
+
+
 ## Lab 5: Consistency 
 Duration: 5 Minutes
 
 In this lab, we will demonstrate a unique feature that shows how we can run natively, easily and effectively multi-statement operation in one consistent atomic transaction across both hybrid and standard table types. 
+
 To test it we will start a new transaction using [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement and insert new truck record both to TRUCK hybrid table and FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK standard table and [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction.
 
- 
+### Step 5.1 Create Table
+
+This DDL will create standard table TRUCK_STANDARD using CREATE TABLE … AS SELECT statement from hybrid table TRUCK.
 
 ```sql
 -- Lab 6
 -- Set lab context
-USE ROLE ACCOUNTADMIN;
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
+CREATE OR REPLACE HYBRID TABLE TRUCK_STANDARD (
+	TRUCK_ID NUMBER(38,0) NOT NULL,
+	MENU_TYPE_ID NUMBER(38,0),
+	PRIMARY_CITY VARCHAR(16777216),
+	REGION VARCHAR(16777216),
+	ISO_REGION VARCHAR(16777216),
+	COUNTRY VARCHAR(16777216),
+	ISO_COUNTRY_CODE VARCHAR(16777216),
+	FRANCHISE_FLAG NUMBER(38,0),
+	YEAR NUMBER(38,0),
+	MAKE VARCHAR(16777216),
+	MODEL VARCHAR(16777216),
+	EV_FLAG NUMBER(38,0),
+	FRANCHISE_ID NUMBER(38,0),
+	TRUCK_OPENING_DATE DATE,
+        TRUCK_EMAIL VARCHAR,
+)
+AS
+SELECT 
+TRUCK_ID,
+MENU_TYPE_ID,
+PRIMARY_CITY,
+REGION,
+ISO_REGION,
+COUNTRY,
+ISO_COUNTRY_CODE,
+FRANCHISE_FLAG,
+YEAR,
+MAKE,
+MODEL,
+EV_FLAG,
+FRANCHISE_ID,
+TRUCK_OPENING_DATE,
+TRUCK_EMAIL
+FROM 
+TRUCK;
+```
+
+### Step 5.1 Run Multi Statement Transaction
+
+
+```sql
+-- Lab 6
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
 USE WAREHOUSE HYBRID_QUICKSTART_WH;
 USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
@@ -396,29 +450,28 @@ SET NEW_TRUCK_ID = $MAX_TRUCK_ID+1;
 -- Create new unique email address
 SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com');
 
+-- Begins a transaction in the current session.
 begin;
-insert into FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01');
+-- Insert records both to standard and hybrid table types. 
+insert into TRUCK_STANDARD values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_UNIQUE_EMAIL);
 insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_UNIQUE_EMAIL);
+-- Commits an open transaction in the current session.
 commit;
 ```
 
+### Step 5.3 Explore Data 
+
+Now we can run select queries to review the new inserted records.
 
 ```sql
-select * from FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
+select * from TRUCK_STANDARDK where TRUCK_ID = $NEW_TRUCK_ID;
 select * from TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
 ```
-
-```sql
-delete from FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
-```
-
-
-
 
 ## Lab 6: Hybrid Querying
 Duration: 5 Minutes
 
-In this lab, we will test the join between hybrid and standard tables. We will use FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK standard table and we will use it to join with table ORDER_HEADER.
+In this lab, we will test the join between hybrid and standard tables. We will use TRUCK_STANDARD standard table we created in previous lab and we will use it to join with table ORDER_HEADER.
 
 ### Step 6.1 Explore Data 
 
@@ -432,7 +485,7 @@ USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
 
 -- Simple query to look at 10 rows of data from standard table FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK
-select * from FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK limit 10;
+select * from TRUCK_STANDARD limit 10;
 -- Simple query to look at 10 rows of data from hybrid table ORDER_HEADER
 select * from ORDER_HEADER limit 10;
 ```
@@ -445,7 +498,7 @@ In order to test the join of the hybrid table ORDER_HEADER with the standard tab
 set ORDER_ID = (select order_id from ORDER_HEADER limit 1);
 
 -- Join tables ORDER_STATE_HYBRID and TRUCK_STANDARD
-select HY.*,ST.* from ORDER_HEADER as HY join FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK as ST on HY.truck_id = ST.TRUCK_ID where HY.ORDER_ID = $ORDER_ID;
+select HY.*,ST.* from ORDER_HEADER as HY join TRUCK_STANDARD as ST on HY.truck_id = ST.TRUCK_ID where HY.ORDER_ID = $ORDER_ID;
 ```
 
 After executing the join statement examine and analyze the data in the result set.
