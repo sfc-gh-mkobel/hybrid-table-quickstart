@@ -264,12 +264,12 @@ select * from TRUCK limit 10;
 select * from ORDER_HEADER limit 10;
 ```
 
-## Lab 3: Unique and Foreign Keys Constraints
+## Lab 2: Unique and Foreign Keys Constraints
 Duration: 10 Minutes
 
 In this part of the lab, we will test Unique and Foreign Keys Constraints.
 
-### Step 3.1 Unique Constraints
+### Step 2.1 Unique Constraints
 In this step, we will test Unique Constraint which ensures that all values in a column are different.
 In table TRUCK that we created in the Set Up lab we defined column TRUCK_EMAIL as NOT NULL and UNIQUE.
 
@@ -305,7 +305,7 @@ insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockhol
 ```
 Statement should run successfully.
 
-### Step 3.2 Insert Foreign Keys Constraints
+### Step 2.2 Insert Foreign Keys Constraints
 
 In this step we will test foreign Keys constraint.
 First, we will try to insert a new record to table ORDER_HEADER. 
@@ -336,7 +336,7 @@ Statement should run successfully.
 
 
 
-### Step 3.3 Truncated Active Foreign Key Constraint
+### Step 2.3 Truncated Active Foreign Key Constraint
 
 In this step, we will test that the table referenced by a foreign key constraint cannot be truncated as long as the foreign key relationship exists.
 To test it run the following statement:
@@ -348,7 +348,7 @@ TRUNCATE TABLE TRUCK;
 The statement should fail and we should receive the following error message:
 "391458 (0A000): Hybrid table 'TRUCK' cannot be truncated as it is involved in active foreign key constraints."
 
-### Step 3.4 Delete Foreign Key Constraint
+### Step 2.4 Delete Foreign Key Constraint
 
 In this step, we will test that a record referenced by a foreign key constraint cannot be deleted as long as the foreign key reference relationship exists.
 
@@ -372,14 +372,14 @@ DELETE FROM TRUCK WHERE TRUCK_ID = $NEW_TRUCK_ID;
 Both statements should run successfully.
 
 
-## Lab 4: Row-Level Locking
+## Lab 3: Row-Level Locking
 
 locking hybrid tables unlike standard tables uses row level locking for update operations. Row Level locking allows for concurrent updates on Independent Records.
 In this lab, we will test concurrent updates to different records.
 
 In order to test it we will run concurrent updates on two different records in the hybrid table ORDER_HEADER. We will use the main worksheet "Hybrid Table - QuickStart" we created in lab 0 and will create a new worksheet "Hybrid Table - QuickStart session 2" to simulate a new session. From the "Hybrid Table - QuickStart" worksheet we will start a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, and run an update DML statement. Before running the [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction statement we will open "Hybrid Table - QuickStart session 2" worksheet and run another update DML statement. finally we will commit the open transaction.
 
-### Step 4.1 Creating a New Worksheet
+### Step 3.1 Creating a New Worksheet
 
 Within Worksheets, click the "+" button in the top-right corner of Snowsight and choose "SQL Worksheet"
 
@@ -387,7 +387,7 @@ Within Worksheets, click the "+" button in the top-right corner of Snowsight and
 
 Rename the Worksheet by clicking on the auto-generated Timestamp name and inputting "Hybrid Table - QuickStart session 2"
 
-### Step 4.2 Running concurrent updates
+### Step 3.2 Running concurrent updates
 
 First Open "Hybrid Table - QuickStart" worksheet the start new transaction and run update DMT statement.
 
@@ -429,14 +429,14 @@ Open "Hybrid Table - QuickStart '' worksheet and run a commit statement to commi
 commit;
 ```
 
-## Lab 5: Consistency 
+## Lab 4: Consistency 
 Duration: 5 Minutes
 
 In this lab, we will demonstrate a unique feature that shows how we can run natively, easily and effectively multi-statement operation in one consistent atomic transaction across both hybrid and standard table types. 
 
 First we will create a new TRUCK_STANDARD table and then start a new transaction using [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, insert new truck record both to TRUCK hybrid table and TRUCK_STANDARD standard table and [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction.
 
-### Step 5.1 Create Table
+### Step 4.1 Create Table
 
 This DDL will create standard table TRUCK_STANDARD using CREATE TABLE … AS SELECT statement from hybrid table TRUCK.
 
@@ -486,7 +486,7 @@ FROM
 TRUCK;
 ```
 
-### Step 5.2 Run Multi Statement Transaction
+### Step 4.2 Run Multi Statement Transaction
 
 
 ```sql
@@ -513,7 +513,7 @@ insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockhol
 commit;
 ```
 
-### Step 5.3 Explore Data 
+### Step 4.3 Explore Data 
 
 Now we can run select queries to review the new inserted records.
 
@@ -522,12 +522,12 @@ select * from TRUCK_STANDARDK where TRUCK_ID = $NEW_TRUCK_ID;
 select * from TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
 ```
 
-## Lab 6: Hybrid Querying
+## Lab 5: Hybrid Querying
 Duration: 5 Minutes
 
 In this lab, we will test the join between hybrid and standard tables. We will use TRUCK_STANDARD standard table we created in previous lab and we will use it to join with table ORDER_HEADER.
 
-### Step 6.1 Explore Data 
+### Step 5.1 Explore Data 
 
 In the Set Up lab, we already crated and loaded data into the ORDER_HEADER tables. Now we can run a few queries and review some information to get familiar with it.
 ```sql
@@ -543,7 +543,7 @@ select * from TRUCK_STANDARD limit 10;
 -- Simple query to look at 10 rows of data from hybrid table ORDER_HEADER
 select * from ORDER_HEADER limit 10;
 ```
-### Step 6.2 Join Hybrid Table and Standard Table
+### Step 5.2 Join Hybrid Table and Standard Table
 
 In order to test the join of the hybrid table ORDER_HEADER with the standard table FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK, let's run the join statement.
 
@@ -558,13 +558,13 @@ select HY.*,ST.* from ORDER_HEADER as HY join TRUCK_STANDARD as ST on HY.truck_i
 After executing the join statement examine and analyze the data in the result set.
 
 
-## Lab 7: Security / Governance
+## Lab 6: Security / Governance
 
 Duration: 10 Minutes
 
 In this lab, we will demonstrate that the security and governance functionalities that have been applied to the standard table are also exist for the hybrid table. 
 
-### Step 7.1 Hybrid Table Access Control and User Management
+### Step 6.1 Hybrid Table Access Control and User Management
 
 Role-based access control (RBAC) in Snowflake for hybrid tables is the same as standard tables.
 The purpose of this exercise is to give you a chance to see how you can manage access to hybrid table data in Snowflake by granting privileges to some roles.
@@ -626,7 +626,7 @@ select * from ORDER_HEADER limit 10;
 
 This time it worked! This is because HYBRID_QUICKSTART_BI_USER_ROLE role has the appropriate privileges at all levels of the hierarchy.
 
-### Step 7.2 Hybrid Table Masking Policy
+### Step 6.2 Hybrid Table Masking Policy
 
 In this step, we will create a new masking policy object and apply the masking policy to a column TRUCK_EMAIL in a table TRUCK using an ALTER TABLE … ALTER COLUMN statement.
 
@@ -672,7 +672,7 @@ USE ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
 select * from TRUCK limit 10;
 ```
 
-## Lab 8: Cleanup
+## Lab 7: Cleanup
 To clean up your Snowflake environment you can run the following SQL Statements:
 
 ```sql
