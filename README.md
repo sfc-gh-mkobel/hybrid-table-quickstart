@@ -374,6 +374,8 @@ Both statements should run successfully.
 
 ## Lab 3: Row-Level Locking
 
+Duration: 10 Minutes
+
 locking hybrid tables unlike standard tables uses row level locking for update operations. Row Level locking allows for concurrent updates on Independent Records.
 In this lab, we will test concurrent updates to different records.
 
@@ -389,7 +391,7 @@ Rename the Worksheet by clicking on the auto-generated Timestamp name and inputt
 
 ### Step 3.2 Running concurrent updates
 
-First Open "Hybrid Table - QuickStart" worksheet the start new transaction and run update DMT statement.
+First Open "Hybrid Table - QuickStart" worksheet the start new transaction and run update DML statement.
 
 ```sql
 -- Lab 4
@@ -430,7 +432,7 @@ commit;
 ```
 
 ## Lab 4: Consistency 
-Duration: 5 Minutes
+Duration: 10 Minutes
 
 In this lab, we will demonstrate a unique feature that shows how we can run natively, easily and effectively multi-statement operation in one consistent atomic transaction across both hybrid and standard table types. 
 
