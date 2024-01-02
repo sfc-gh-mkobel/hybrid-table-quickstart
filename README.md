@@ -299,8 +299,8 @@ Since we configured the column TRUCK_EMAIL in table TRUCK as UNIQUE the statemen
 Now we will create new unique email address and insert a new record to table TRUCK:
 
 ```sql
-- Create new unique email address
-SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com')
+-- Create new unique email address
+SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com');
 insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_EMAIL);
 ```
 Statement should run successfully.
@@ -374,7 +374,47 @@ Both statements should run successfully.
 
 ## Lab 4: Row-Level Locking
 ## Lab 5: Consistency 
-(Multi-statement transaction include both hybrid and standard tables)
+Duration: 5 Minutes
+
+In this lab, we will demonstrate a unique feature that shows how we can run natively, easily and effectively multi-statement operation in one consistent atomic transaction across both hybrid and standard table types. 
+To test it we will start a new transaction using [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement and insert new truck record both to TRUCK hybrid table and FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK standard table and [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction.
+
+ 
+
+```sql
+-- Lab 6
+-- Set lab context
+USE ROLE ACCOUNTADMIN;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
+SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
+--Increment max truck_id by one
+SET NEW_TRUCK_ID = $MAX_TRUCK_ID+1;
+
+-- Create new unique email address
+SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com');
+
+begin;
+insert into FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01');
+insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_UNIQUE_EMAIL);
+commit;
+```
+
+
+```sql
+select * from FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
+select * from TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
+```
+
+```sql
+delete from FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
+```
+
+
+
+
 ## Lab 6: Hybrid Querying
 Duration: 5 Minutes
 
