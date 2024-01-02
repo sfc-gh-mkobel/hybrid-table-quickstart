@@ -374,6 +374,22 @@ Both statements should run successfully.
 
 ## Lab 4: Row-Level Locking
 
+locking hybrid tables unlike standard tables uses row level locking for update operations. Row Level locking allows for concurrent updates on Independent Records.
+In this lab, we will test concurrent updates to different records.
+In order to test it we will run concurrent updates on two different records in the hybrid table ORDER_HEADER. We will use the main worksheet "Hybrid Table - QuickStart" we created in lab 0 and will create a new worksheet "Hybrid Table - QuickStart session 2" to simulate a new session. From the "Hybrid Table - QuickStart" worksheet we will start a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, and run an update DML statement. Before running the [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction statement we will open "Hybrid Table - QuickStart session 2" worksheet and run another update DML statement. finally we will commit the open transaction.
+
+### Step 0.1 Creating a New Worksheet
+
+Within Worksheets, click the "+" button in the top-right corner of Snowsight and choose "SQL Worksheet"
+
+![Screenshot 2023-10-03 at 13 23 58](https://github.com/snowflakecorp/techup-fy24snowday-hybrid_tables/assets/132544324/f0b2535a-30ff-4b7a-a1ef-1bf2b0b580e9)
+
+Rename the Worksheet by clicking on the auto-generated Timestamp name and inputting "Hybrid Table - QuickStart session 2"
+
+### Step 0.1 Running concurrent updates
+
+
+
 
 ## Lab 5: Consistency 
 Duration: 5 Minutes
