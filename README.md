@@ -461,12 +461,12 @@ select * from ORDER_HEADER limit 10;
 ```
 We’re not able to select any data. That’s because the role HYBRID_QUICKSTART_BI_USER_ROLE has not been granted the necessary privileges.
 
-Use role HYBRID_QUICKSTART_ROLE and grant role HYBRID_QUICKSTART_BI_USER_ROLE select privileges on table ORDER_HEADER.
+Use role HYBRID_QUICKSTART_ROLE and grant role HYBRID_QUICKSTART_BI_USER_ROLE select privileges on all tables in schema DATA.
 
 ```sql
 -- Use HYBRID_QUICKSTART_ROLE role
 USE ROLE HYBRID_QUICKSTART_ROLE;
-GRANT SELECT ON TABLE ORDER_HEADER TO ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
+GRANT SELECT ON ALL TABLES IN SCHEMA DATA TO ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
 ```
 
 Try again to select some data from ORDER_STATE_HYBRID hybrid table
@@ -480,6 +480,53 @@ select * from ORDER_HEADER limit 10;
 This time it worked! This is because HYBRID_QUICKSTART_BI_USER_ROLE role has the appropriate privileges at all levels of the hierarchy.
 
 ### Step 7.2 Hybrid Table Masking Policy
+
+In this step, we will create a new masking policy object and apply the masking policy to a column TRUCK_EMAIL in a table TRUCK using an ALTER TABLE … ALTER COLUMN statement.
+
+First, we will create a new masking policy.
+
+```sql
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
+--full column masking version, always masks
+create masking policy hide_column_values as
+(col_value varchar) returns varchar ->
+  case
+     WHEN current_role() IN ('HYBRID_QUICKSTART_ROLE') THEN col_value
+    else '***MASKED***'
+  end;
+```
+
+Apply the policy to the table.
+
+```sql
+-- set masking policy
+alter table TRUCK modify column TRUCK_EMAIL
+set masking policy hide_column_values using (TRUCK_EMAIL);
+```
+
+Since we are using the role HYBRID_QUICKSTART_ROLE column TRUCK_EMAIL should not be masked.
+Run the statement to see if it has the desired effect
+
+```sql
+select * from TRUCK limit 10;
+```
+
+Since we are using role HYBRID_QUICKSTART_BI_USER_ROLE column TRUCK_EMAIL should be masked.
+Run the statement to see if it has the desired effect
+
+```sql
+-- Use HYBRID_QUICKSTART_BI_USER_ROLE role
+USE ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
+select * from TRUCK limit 10;
+```
+
+
+
 ## Lab 8: Execution Details
 ## Lab 9: Cleanup
 
@@ -937,7 +984,7 @@ Use role HYBRID_HOL_USER_(USER_NUMBER)_ROLE and grant role HYBRID_HOL_BI_USER_(u
 
 ```sql
 -- Use HYBRID_HOL_USER_(USER_NUMBER)_ROLE role
-USE ROLE IDENTIFIER($USER_ROLE);
+USE ROLE IDENTIFIER($);
 GRANT SELECT ON TABLE ORDER_STATE_HYBRID_CONSTRAINTS TO ROLE IDENTIFIER($BI_USER_ROLE);
 ```
 
