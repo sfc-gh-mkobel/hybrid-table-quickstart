@@ -727,3 +727,20 @@ DROP ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
 ```
 
 The last step is to manually delete "Hybrid Table - QuickStart" and "Hybrid Table - QuickStart session 2" worksheets.
+
+## Lab 8: Conclusion & next steps
+
+Having completed this quickstart you have successfully:
+- Created Hybrid Table and Bulk Load Data
+- Explore the Data 
+- Learned about Unique and Foreign Keys Constraints
+- Learned about hybrid table unique row level locking
+- Learned about consistency and how you can run multi-statement operation in one consistent atomic transaction across both hybrid and standard table types.
+- Learned about hybrid querying and how to join standard table and hybrid table
+- Learned that security & governance in Snowflake for hybrid tables are the same as for standard tables.
+
+
+### Additional References:
+- [Snowflake unistore landing page](https://www.snowflake.com/en/data-cloud/workloads/unistore/)
+- [Build, Run, and Distribute Custom Apps on Snowflake Snowday 2023](https://snowflake.wistia.com/medias/mvtdzo06c5)
+- [Snowflake BUILD: Simplify Application Development With Hybrid Tables](https://www.youtube.com/watch?v=kBdz2BFxp6U)
