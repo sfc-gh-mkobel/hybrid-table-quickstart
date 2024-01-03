@@ -311,15 +311,15 @@ Now we will create new unique email address and insert a new record to table TRU
 ```sql
 -- Create new unique email address
 SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com');
-insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_EMAIL);
+insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_UNIQUE_EMAIL);
 ```
 Statement should run successfully.
 
 ### Step 2.2 Insert Foreign Keys Constraints
 
 In this step we will test foreign Keys constraint.
-First, we will try to insert a new record to table ORDER_HEADER. 
-It is expected that the insert statement would fail since TRUCK table does not contain a record with truck_id , which is the foreign key reference.
+First, we will try to insert a new record to table ORDER_HEADER with none exist truck id.
+It is expected that the insert statement would fail since we will violate the TRUCK table foreign key constraint.
 
 ```sql
 -- Since ORDER_ID is a primary key we need to calculate a new primary key value in order not to fail on the "Primary key already exists" error.
@@ -365,7 +365,7 @@ In this step, we will test that a record referenced by a foreign key constraint 
 To test it run the following statement:
 
 ```sql
-DELETE TRUCK WHERE TRUCK_ID = $EXIST_TRUCK_ID;
+DELETE TRUCK WHERE TRUCK_ID = $NEW_TRUCK_ID;
 ```
 
 The statement should fail and we should receive the following error message:
@@ -386,7 +386,7 @@ Both statements should run successfully.
 
 Duration: 10 Minutes
 
-locking hybrid tables unlike standard tables uses row level locking for update operations. Row Level locking allows for concurrent updates on Independent Records.
+locking hybrid tables unlike standard tables uses row level locking for update operations. Row Level locking allows for concurrent updates on independent records.
 In this lab, we will test concurrent updates to different records.
 
 In order to test it we will run concurrent updates on two different records in the hybrid table ORDER_HEADER. We will use the main worksheet "Hybrid Table - QuickStart" we created in lab 0 and will create a new worksheet "Hybrid Table - QuickStart session 2" to simulate a new session. From the "Hybrid Table - QuickStart" worksheet we will start a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, and run an update DML statement. Before running the [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction statement we will open "Hybrid Table - QuickStart session 2" worksheet and run another update DML statement. finally we will commit the open transaction.
@@ -411,12 +411,21 @@ USE WAREHOUSE HYBRID_QUICKSTART_WH;
 USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
 
-begin;
+-- Begins a transaction in the current session.
+BEGIN;
+-- Update record
 UPDATE ORDER_HEADER
 SET order_status = 'COMPLETED'
 WHERE order_id = 87311436;
 ```
 Note that we didn't commit the transaction so now there is an open lock on the record WHERE order_id = 87311436.
+
+Run SHOW TRANSACTIONS statement. It is expected that the SHOW TRANSACTIONS statement would return 1 single open transaction.
+```sql
+-- List all running transactions
+SHOW TRANSACTIONS;
+```
+
 
 Open "Hybrid Table - QuickStart session 2" and run the update DML statement:
 
@@ -428,6 +437,7 @@ USE WAREHOUSE HYBRID_QUICKSTART_WH;
 USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
 
+-- Update record
 UPDATE ORDER_HEADER
 SET order_status = 'COMPLETED'
 WHERE order_id = 403869687;
@@ -438,7 +448,8 @@ Update statement should run successfully.
 Open "Hybrid Table - QuickStart '' worksheet and run a commit statement to commit the open transaction.
 
 ```sql
-commit;
+-- Commits an open transaction in the current session.
+COMMIT;
 ```
 
 ## Lab 4: Consistency 
