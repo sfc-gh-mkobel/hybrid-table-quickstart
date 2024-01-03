@@ -731,14 +731,14 @@ The last step is to manually delete "Hybrid Table - QuickStart" and "Hybrid Tabl
 
 ## Lab 8: Conclusion & Next Steps
 
-Having completed this quickstart you have successfully:
+Having completed this quickstart you have successfully
 - Created Hybrid Table and Bulk Load Data
 - Explore the Data 
 - Learned about Unique and Foreign Keys Constraints
 - Learned about hybrid table unique row level locking
-- Learned about consistency and how you can run multi-statement operation in one consistent atomic transaction across both hybrid and standard table types.
+- Learned about consistency and how you can run multi-statement operation in one consistent atomic transaction across both hybrid and standard table types
 - Learned about hybrid querying and how to join standard table and hybrid table
-- Learned that security and governance principles apply similarly to both hybrid and standard tables.
+- Learned that security and governance principles apply similarly to both hybrid and standard tables
 
 
 ### Additional References:
