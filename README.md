@@ -630,7 +630,7 @@ This time it worked! This is because HYBRID_QUICKSTART_BI_USER_ROLE role has the
 
 ### Step 6.2 Hybrid Table Masking Policy
 
-In this step, we will create a new masking policy object and apply the masking policy to a column TRUCK_EMAIL in a table TRUCK using an ALTER TABLE … ALTER COLUMN statement.
+In this step, we will create a new masking policy object and apply the masking policy to a column TRUCK_EMAIL in hybrid table TRUCK using an ALTER TABLE … ALTER COLUMN statement.
 
 First, we will create a new masking policy.
 
@@ -650,7 +650,7 @@ create masking policy hide_column_values as
   end;
 ```
 
-Apply the policy to the table.
+Apply the policy to the hybrid table.
 
 ```sql
 -- set masking policy
