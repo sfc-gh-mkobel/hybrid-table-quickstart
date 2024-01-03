@@ -401,7 +401,7 @@ Rename the Worksheet by clicking on the auto-generated Timestamp name and inputt
 
 ### Step 3.2 Running concurrent updates
 
-First Open "Hybrid Table - QuickStart" then set and select MAX_ORDER_ID variable.
+First Open "Hybrid Table - QuickStart" then select and set MAX_ORDER_ID variable.
 
 ```sql
 -- Lab 4
@@ -413,7 +413,7 @@ USE SCHEMA DATA;
 
 SET MAX_ORDER_ID = (SELECT max(order_id) from ORDER_HEADER);
 SELECT $MAX_ORDER_ID;
-```sql
+```
 Note the MAX_ORDER_ID variable value.
 
 Start new transaction and run the first update DML statement.
@@ -433,8 +433,7 @@ Run SHOW TRANSACTIONS statement. It is expected that the SHOW TRANSACTIONS state
 SHOW TRANSACTIONS;
 ```
 
-
-Open "Hybrid Table - QuickStart session 2" then set and select MIN_ORDER_ID variable.
+Open "Hybrid Table - QuickStart session 2" then select and set MIN_ORDER_ID variable.
 
 ```sql
 -- Lab 4
@@ -457,14 +456,18 @@ UPDATE ORDER_HEADER
 SET order_status = 'COMPLETED'
 WHERE order_id = $MIN_ORDER_ID;
 ```
-
 Update statement should run successfully.
 
-Open "Hybrid Table - QuickStart '' worksheet and run a commit statement to commit the open transaction.
+Open "Hybrid Table - QuickStart" worksheet and run a commit statement to commit the open transaction.
 
 ```sql
 -- Commits an open transaction in the current session.
 COMMIT;
+```
+
+Run the following statement to view the updated record:
+```sql
+SELECT * from ORDER_HEADER where order_status = 'COMPLETED';
 ```
 
 ## Lab 4: Consistency 
