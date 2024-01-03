@@ -482,7 +482,7 @@ First, we will create a new TRUCK_STANDARD table. Afterward, we'll initiate a ne
 This DDL will create standard table TRUCK_STANDARD using CREATE TABLE … AS SELECT statement from hybrid table TRUCK.
 
 ```sql
--- Lab 5
+-- Lab 4
 -- Set lab context
 USE ROLE HYBRID_QUICKSTART_ROLE;
 USE WAREHOUSE HYBRID_QUICKSTART_WH;
@@ -529,15 +529,9 @@ TRUCK;
 
 ### Step 4.2 Run Multi Statement Transaction
 
+Set new truck id variable and run multi statement transaction.
 
 ```sql
--- Lab 6
--- Set lab context
-USE ROLE HYBRID_QUICKSTART_ROLE;
-USE WAREHOUSE HYBRID_QUICKSTART_WH;
-USE DATABASE HYBRID_QUICKSTART_DB;
-USE SCHEMA DATA;
-
 SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
 --Increment max truck_id by one
 SET NEW_TRUCK_ID = $MAX_TRUCK_ID+1;
