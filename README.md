@@ -219,6 +219,7 @@ insert into ORDER_HEADER (
 
 ## Lab 1: Explore Data
 Duration: 5 Minutes
+
 In the previous Set Up lab we created HYBRID_QUICKSTART_ROLE role, HYBRID_QUICKSTART_WH warehouse, HYBRID_QUICKSTART_DB database and schema DATA lets use them.
 
 ```sql
@@ -279,6 +280,13 @@ In table TRUCK that we created in the Set Up lab we defined column TRUCK_EMAIL a
 Display information about the columns in the table. Note the unique key value for TRUCK_EMAIL column.
 
 ```sql
+-- Lab 2
+-- Set lab context
+USE ROLE HYBRID_QUICKSTART_ROLE;
+USE WAREHOUSE HYBRID_QUICKSTART_WH;
+USE DATABASE HYBRID_QUICKSTART_DB;
+USE SCHEMA DATA;
+
 --Describe the columns in the table TRUCK
 DESC TABLE TRUCK;
 ```
