@@ -465,7 +465,7 @@ Open "Hybrid Table - QuickStart" worksheet and run a commit statement to commit 
 COMMIT;
 ```
 
-Run the following statement to view the updated record:
+Run the following statement to view the updated records:
 ```sql
 SELECT * from ORDER_HEADER where order_status = 'COMPLETED';
 ```
@@ -566,7 +566,7 @@ In this lab, we will test the join between hybrid and standard tables. We will u
 
 In the Set Up lab, we already created and loaded data into the ORDER_HEADER tables. Now we can run a few queries and review some information to get familiar with it.
 ```sql
--- Lab 6
+-- Lab 5
 -- Set lab context
 USE ROLE HYBRID_QUICKSTART_ROLE;
 USE WAREHOUSE HYBRID_QUICKSTART_WH;
@@ -607,7 +607,7 @@ The purpose of this exercise is to give you a chance to see how you can manage a
 First we will create a new HYBRID_QUICKSTART_BI_USER_ROLE role
 
 ```sql
--- Lab 7
+-- Lab 6
 -- Set lab context
 USE ROLE HYBRID_QUICKSTART_ROLE;
 USE WAREHOUSE HYBRID_QUICKSTART_WH;
@@ -711,7 +711,7 @@ select * from TRUCK limit 10;
 To clean up your Snowflake environment you can run the following SQL Statements:
 
 ```sql
--- Lab 8
+-- Lab 7
 -- Set lab context
 USE ROLE HYBRID_QUICKSTART_ROLE;
 USE WAREHOUSE HYBRID_QUICKSTART_WH;
