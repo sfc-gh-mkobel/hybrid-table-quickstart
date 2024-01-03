@@ -235,7 +235,7 @@ View tables properties and metadata. Note the value of is_hybrid column.
 SHOW TABLES LIKE '%TRUCK%';
 SHOW TABLES LIKE '%ORDER_STATE%';
 ```
-Display information about the columns in the table. Note the primary key column and also that all three tables have table structure.
+Display information about the columns in the table. Note the primary key column and also that all tables have table structure.
 ```sql
 --Describe the columns in the table TRUCK
 DESC TABLE TRUCK;
@@ -258,7 +258,7 @@ SHOW INDEXES;
 
 Look at a sample of the tables.
 ```sql
--- Simple query to look at 10 rows of data table TRUCK
+-- Simple query to look at 10 rows of data from table TRUCK
 select * from TRUCK limit 10;
 -- Simple query to look at 10 rows of data from table ORDER_HEADER
 select * from ORDER_HEADER limit 10;
@@ -527,7 +527,7 @@ select * from TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
 ## Lab 5: Hybrid Querying
 Duration: 5 Minutes
 
-In this lab, we will test the join between hybrid and standard tables. We will use TRUCK_STANDARD standard table we created in previous lab and we will use it to join with table ORDER_HEADER.
+In this lab, we will test the join between hybrid and standard tables. We will use TRUCK_STANDARD standard table we created in previous lab and we will use it to join with hybrid table ORDER_HEADER.
 
 ### Step 5.1 Explore Data 
 
