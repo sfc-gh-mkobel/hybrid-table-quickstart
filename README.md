@@ -231,11 +231,11 @@ USE SCHEMA DATA;
 ```
 We also created and loaded data into the TRUCK and ORDER_HEADER hybrid tables. Now we can run a few queries and review some information to get familiar with it.
 
-View tables properties and metadata. Note the value of is_hybrid column.
+View tables properties and metadata.
 
 ```sql
 SHOW TABLES LIKE '%TRUCK%';
-SHOW TABLES LIKE '%ORDER_STATE%';
+SHOW TABLES LIKE '%ORDER_HEADER%';
 ```
 Display information about the columns in the table. Note the primary key column and also that all tables have table structure.
 ```sql
