@@ -554,7 +554,7 @@ commit;
 Now we can run select queries to review the new inserted records.
 
 ```sql
-select * from TRUCK_STANDARDK where TRUCK_ID = $NEW_TRUCK_ID;
+select * from TRUCK_STANDARD where TRUCK_ID = $NEW_TRUCK_ID;
 select * from TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
 ```
 
