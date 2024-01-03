@@ -401,7 +401,7 @@ Rename the Worksheet by clicking on the auto-generated Timestamp name and inputt
 
 ### Step 3.2 Running concurrent updates
 
-First Open "Hybrid Table - QuickStart" then select and set MAX_ORDER_ID variable.
+First Open "Hybrid Table - QuickStart" worksheet and then select and set MAX_ORDER_ID variable.
 
 ```sql
 -- Lab 4
@@ -433,7 +433,7 @@ Run SHOW TRANSACTIONS statement. It is expected that the SHOW TRANSACTIONS state
 SHOW TRANSACTIONS;
 ```
 
-Open "Hybrid Table - QuickStart session 2" then select and set MIN_ORDER_ID variable.
+Now open "Hybrid Table - QuickStart session 2" worksheet and then select and set MIN_ORDER_ID variable.
 
 ```sql
 -- Lab 4
