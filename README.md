@@ -25,7 +25,9 @@ Hybrid tables may be suitable for some transactional applications, depending on 
 
 Hybrid tables provide the lower latency and higher throughput for single-row DMLs necessary for these use cases.
 
-In this quickstart we will use Tasty Bytes order synthetic data to simulate a data serving use case. Each record in these datasets represents the state of a truck order.
+In this quickstart we will use Tasty Bytes snowflake fictional food truck business data to simulate a data serving use case. We will use two tables:
+- ORDER_HEADER table -  This table stores order metadata such as TRUCK_ID, CUSTOMER_ID, ORDER_AMOUNT, etc.
+- TRUCK table -  This table store truck metadata such as TRUCK_ID,FRANCHISE_ID,MENU_TYPE_ID, etc.
 
 
 ### What You’ll Learn
@@ -147,7 +149,7 @@ FROM
 FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK;
 ```
 
-This DDL will create the structure for the ORDER_HEADER hybrid table
+This DDL will create the structure for the ORDER_HEADER hybrid table.
 Note the following:
 - Primary key constraint on ORDER_ID column
 - Foreign key references constraint on column TRUCK_ID from table TRUCK
