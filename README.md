@@ -401,7 +401,7 @@ Rename the Worksheet by clicking on the auto-generated Timestamp name and inputt
 
 ### Step 3.2 Running concurrent updates
 
-First Open "Hybrid Table - QuickStart" worksheet the start new transaction and run update DML statement.
+First Open "Hybrid Table - QuickStart" then set and select MAX_ORDER_ID variable.
 
 ```sql
 -- Lab 4
@@ -411,14 +411,21 @@ USE WAREHOUSE HYBRID_QUICKSTART_WH;
 USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
 
+SET MAX_ORDER_ID = (SELECT max(order_id) from ORDER_HEADER);
+SELECT $MAX_ORDER_ID;
+```sql
+Note the MAX_ORDER_ID variable value.
+
+Start new transaction and run the first update DML statement.
+```sql
 -- Begins a transaction in the current session.
 BEGIN;
 -- Update record
 UPDATE ORDER_HEADER
 SET order_status = 'COMPLETED'
-WHERE order_id = 87311436;
+WHERE order_id = $MAX_ORDER_ID;
 ```
-Note that we didn't commit the transaction so now there is an open lock on the record WHERE order_id = 87311436.
+Note that we didn't commit the transaction so now there is an open lock on the record WHERE order_id = $MAX_ORDER_ID.
 
 Run SHOW TRANSACTIONS statement. It is expected that the SHOW TRANSACTIONS statement would return 1 single open transaction.
 ```sql
@@ -427,7 +434,7 @@ SHOW TRANSACTIONS;
 ```
 
 
-Open "Hybrid Table - QuickStart session 2" and run the update DML statement:
+Open "Hybrid Table - QuickStart session 2" then set and select MIN_ORDER_ID variable.
 
 ```sql
 -- Lab 4
@@ -437,12 +444,20 @@ USE WAREHOUSE HYBRID_QUICKSTART_WH;
 USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
 
+SET MIN_ORDER_ID = (SELECT max(order_id) from ORDER_HEADER);
+SELECT $MIN_ORDER_ID;
+```
+Note that the MIN_ORDER_ID variable value is different from the MAX_ORDER_ID variable value we used in the first update DML statement.
+
+
+Run second update DML statement.
+```sql
 -- Update record
 UPDATE ORDER_HEADER
 SET order_status = 'COMPLETED'
-WHERE order_id = 403869687;
+WHERE order_id = $MIN_ORDER_ID;
 ```
-Note that the order_id in the second update DML statment is different from the first update DML statement.
+
 Update statement should run successfully.
 
 Open "Hybrid Table - QuickStart '' worksheet and run a commit statement to commit the open transaction.
