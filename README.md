@@ -237,7 +237,7 @@ View tables properties and metadata.
 SHOW TABLES LIKE '%TRUCK%';
 SHOW TABLES LIKE '%ORDER_HEADER%';
 ```
-Display information about the columns in the table. Note the primary key column and also that all tables have table structure.
+Display information about the columns in the table. Note the primary key and unique key columns.
 ```sql
 --Describe the columns in the table TRUCK
 DESC TABLE TRUCK;
