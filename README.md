@@ -443,7 +443,7 @@ USE WAREHOUSE HYBRID_QUICKSTART_WH;
 USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
 
-SET MIN_ORDER_ID = (SELECT max(order_id) from ORDER_HEADER);
+SET MIN_ORDER_ID = (SELECT min(order_id) from ORDER_HEADER);
 SELECT $MIN_ORDER_ID;
 ```
 Note that the MIN_ORDER_ID variable value is different from the MAX_ORDER_ID variable value we used in the first update DML statement.
