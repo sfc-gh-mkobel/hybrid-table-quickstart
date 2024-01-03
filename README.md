@@ -531,7 +531,7 @@ In this lab, we will test the join between hybrid and standard tables. We will u
 
 ### Step 5.1 Explore Data 
 
-In the Set Up lab, we already crated and loaded data into the ORDER_HEADER tables. Now we can run a few queries and review some information to get familiar with it.
+In the Set Up lab, we already created and loaded data into the ORDER_HEADER tables. Now we can run a few queries and review some information to get familiar with it.
 ```sql
 -- Lab 6
 -- Set lab context
