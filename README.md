@@ -723,6 +723,7 @@ DROP DATABASE HYBRID_QUICKSTART_DB;
 DROP WAREHOUSE HYBRID_QUICKSTART_WH;
 USE ROLE ACCOUNTADMIN;
 DROP ROLE HYBRID_QUICKSTART_ROLE;
+DROP ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
 ```
 
 The last step is to manually delete "Hybrid Table - QuickStart" and "Hybrid Table - QuickStart session 2" worksheets.
