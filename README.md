@@ -728,7 +728,7 @@ DROP ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
 
 The last step is to manually delete "Hybrid Table - QuickStart" and "Hybrid Table - QuickStart session 2" worksheets.
 
-## Lab 8: Conclusion & next steps
+## Lab 8: Conclusion & Next Steps
 
 Having completed this quickstart you have successfully:
 - Created Hybrid Table and Bulk Load Data
