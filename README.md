@@ -27,7 +27,7 @@ Hybrid tables provide the lower latency and higher throughput for single-row DML
 
 In this quickstart we will use Tasty Bytes snowflake fictional food truck business data to simulate a data serving use case. We will use two tables:
 - ORDER_HEADER table -  This table stores order metadata such as TRUCK_ID, CUSTOMER_ID, ORDER_AMOUNT, etc.
-- TRUCK table -  This table store truck metadata such as TRUCK_ID,FRANCHISE_ID,MENU_TYPE_ID, etc.
+- TRUCK table -  This table stores truck metadata such as TRUCK_ID,FRANCHISE_ID,MENU_TYPE_ID, etc.
 
 
 ### What You’ll Learn
@@ -106,8 +106,9 @@ USE SCHEMA DATA;
 You may bulk load data into hybrid tables by copying from a data stage or other tables (that is, using CTAS, COPY, or INSERT INTO … SELECT).
 It is strongly recommended to bulk load data into a hybrid table using a CREATE TABLE … AS SELECT statement, as there are several optimizations which can only be applied to a data load as part of table creation. You need to define all keys, indexes, and constraints at the creation of a hybrid table. 
 
-This DDL will create hybrid table TRUCK using CREATE TABLE … AS SELECT statement.
-Note the primary key constraint on TRUCK_ID column.
+This DDL will create a hybrid table TRUCK using CREATE TABLE … AS SELECT statement.
+Note the primary key constraint on the TRUCK_ID column.
+
 
 ```sql
 CREATE OR REPLACE HYBRID TABLE TRUCK (
@@ -220,8 +221,7 @@ insert into ORDER_HEADER (
 ## Lab 1: Explore Data
 Duration: 5 Minutes
 
-In the previous Set Up lab we created HYBRID_QUICKSTART_ROLE role, HYBRID_QUICKSTART_WH warehouse, HYBRID_QUICKSTART_DB database and schema DATA lets use them.
-
+In the previous Set Up lab we created HYBRID_QUICKSTART_ROLE role, HYBRID_QUICKSTART_WH warehouse, HYBRID_QUICKSTART_DB database and schema DATA. Let's use them.
 ```sql
 -- Lab 1
 -- Set lab context
@@ -277,7 +277,7 @@ In this step, we will test Unique Constraint which ensures that all values in a 
 In table TRUCK that we created in the Set Up lab we defined column TRUCK_EMAIL as NOT NULL and UNIQUE.
 
 
-Display information about the columns in the table. Note the unique key value for TRUCK_EMAIL column.
+Display information about the columns in the table. Note the unique key value for the TRUCK_EMAIL column.
 
 ```sql
 -- Lab 2
@@ -317,8 +317,8 @@ Statement should run successfully.
 
 ### Step 2.2 Insert Foreign Keys Constraints
 
-In this step we will test foreign Keys constraint.
-First, we will try to insert a new record to table ORDER_HEADER with none exist truck id.
+In this step we will test foreign key constraint.
+First, we will try to insert a new record to table ORDER_HEADER with non existing truck id.
 It is expected that the insert statement would fail since we will violate the TRUCK table foreign key constraint.
 
 ```sql
@@ -389,7 +389,7 @@ Duration: 10 Minutes
 locking hybrid tables unlike standard tables uses row level locking for update operations. Row Level locking allows for concurrent updates on independent records.
 In this lab, we will test concurrent updates to different records.
 
-In order to test it we will run concurrent updates on two different records in the hybrid table ORDER_HEADER. We will use the main worksheet "Hybrid Table - QuickStart" we created in lab 0 and will create a new worksheet "Hybrid Table - QuickStart session 2" to simulate a new session. From the "Hybrid Table - QuickStart" worksheet we will start a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, and run an update DML statement. Before running the [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction statement we will open "Hybrid Table - QuickStart session 2" worksheet and run another update DML statement. finally we will commit the open transaction.
+In order to test it we will run concurrent updates on two different records in the hybrid table ORDER_HEADER. We will use the main worksheet "Hybrid Table - QuickStart" we created in lab 0 and will create a new worksheet "Hybrid Table - QuickStart session 2" to simulate a new session. From the "Hybrid Table - QuickStart" worksheet we will start a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, and run an update DML statement. Before running the [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction statement we will open the "Hybrid Table - QuickStart session 2" worksheet and run another update DML statement. finally we will commit the open transaction.
 
 ### Step 3.1 Creating a New Worksheet
 
@@ -416,7 +416,7 @@ SELECT $MAX_ORDER_ID;
 ```
 Note the MAX_ORDER_ID variable value.
 
-Start new transaction and run the first update DML statement.
+Start a new transaction and run the first update DML statement.
 ```sql
 -- Begins a transaction in the current session.
 BEGIN;
@@ -433,7 +433,7 @@ Run SHOW TRANSACTIONS statement. It is expected that the SHOW TRANSACTIONS state
 SHOW TRANSACTIONS;
 ```
 
-Now open "Hybrid Table - QuickStart session 2" worksheet and then select and set MIN_ORDER_ID variable.
+Now open the "Hybrid Table - QuickStart session 2" worksheet and then select and set MIN_ORDER_ID variable.
 
 ```sql
 -- Lab 4
@@ -480,7 +480,7 @@ First, we will create a new TRUCK_STANDARD table. Afterward, we'll initiate a ne
 
 ### Step 4.1 Create Table
 
-This DDL will create standard table TRUCK_STANDARD using CREATE TABLE … AS SELECT statement from hybrid table TRUCK.
+This DDL will create a standard table TRUCK_STANDARD using CREATE TABLE … AS SELECT statement from hybrid table TRUCK.
 
 ```sql
 -- Lab 4
@@ -530,7 +530,8 @@ TRUCK;
 
 ### Step 4.2 Run Multi Statement Transaction
 
-Set new truck id variable and run multi statement transaction.
+Set a new truck id variable and run a multi statement transaction.
+
 
 ```sql
 SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
@@ -561,7 +562,7 @@ select * from TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
 ## Lab 5: Hybrid Querying
 Duration: 5 Minutes
 
-In this lab, we will test the join between hybrid and standard tables. We will use TRUCK_STANDARD standard table we created in previous lab and we will use it to join with hybrid table ORDER_HEADER.
+In this lab, we will test the join between hybrid and standard tables. We will use the TRUCK_STANDARD table created in the previous lab and join it with the hybrid table ORDER_HEADER.
 
 ### Step 5.1 Explore Data 
 
@@ -591,7 +592,7 @@ set ORDER_ID = (select order_id from ORDER_HEADER limit 1);
 select HY.*,ST.* from ORDER_HEADER as HY join TRUCK_STANDARD as ST on HY.truck_id = ST.TRUCK_ID where HY.ORDER_ID = $ORDER_ID;
 ```
 
-After executing the join statement examine and analyze the data in the result set.
+After executing the join statement, examine and analyze the data in the result set.
 
 
 ## Lab 6: Security / Governance
@@ -660,11 +661,11 @@ USE ROLE HYBRID_QUICKSTART_BI_USER_ROLE;
 select * from ORDER_HEADER limit 10;
 ```
 
-This time it worked! This is because HYBRID_QUICKSTART_BI_USER_ROLE role has the appropriate privileges at all levels of the hierarchy.
+This time it worked! This is because the HYBRID_QUICKSTART_BI_USER_ROLE role has the appropriate privileges at all levels of the hierarchy.
 
 ### Step 6.2 Hybrid Table Masking Policy
 
-In this step, we will create a new masking policy object and apply the masking policy to a column TRUCK_EMAIL in hybrid table TRUCK using an ALTER TABLE … ALTER COLUMN statement.
+In this step, we will create a new masking policy object and apply it to the TRUCK_EMAIL column in the TRUCK hybrid table using an ALTER TABLE... ALTER COLUMN statement.
 
 First, we will create a new masking policy.
 
@@ -692,14 +693,14 @@ alter table TRUCK modify column TRUCK_EMAIL
 set masking policy hide_column_values using (TRUCK_EMAIL);
 ```
 
-Since we are using the role HYBRID_QUICKSTART_ROLE column TRUCK_EMAIL should not be masked.
+Since we are using the HYBRID_QUICKSTART_ROLE role column TRUCK_EMAIL should not be masked.
 Run the statement to see if it has the desired effect
 
 ```sql
 select * from TRUCK limit 10;
 ```
 
-Since we are using role HYBRID_QUICKSTART_BI_USER_ROLE column TRUCK_EMAIL should be masked.
+Since we are using HYBRID_QUICKSTART_BI_USER_ROLE role column TRUCK_EMAIL should be masked.
 Run the statement to see if it has the desired effect
 
 ```sql
@@ -737,7 +738,7 @@ Having completed this quickstart you have successfully:
 - Learned about hybrid table unique row level locking
 - Learned about consistency and how you can run multi-statement operation in one consistent atomic transaction across both hybrid and standard table types.
 - Learned about hybrid querying and how to join standard table and hybrid table
-- Learned that security & governance in Snowflake for hybrid tables are the same as for standard tables.
+- Learned that security and governance principles apply similarly to both hybrid and standard tables.
 
 
 ### Additional References:
