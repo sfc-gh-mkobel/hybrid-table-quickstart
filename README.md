@@ -25,7 +25,7 @@ Hybrid tables may be suitable for some transactional applications, depending on 
 
 Hybrid tables provide the lower latency and higher throughput for single-row DMLs necessary for these use cases.
 
-In this quickstart we will use Tasty Bytes snowflake fictional food truck business data to simulate a data serving use case. We will use two tables:
+In this quickstart, we will use Tasty Bytes Snowflake fictional food truck business data to simulate a data serving use case. We will use two tables:
 - ORDER_HEADER table -  This table stores order metadata such as TRUCK_ID, CUSTOMER_ID, ORDER_AMOUNT, etc.
 - TRUCK table -  This table stores truck metadata such as TRUCK_ID,FRANCHISE_ID,MENU_TYPE_ID, etc.
 
@@ -40,8 +40,8 @@ In this quickstart we will use Tasty Bytes snowflake fictional food truck busine
 ### What You’ll Need
 
 To complete this quickstart, attendees need the following:
-- Snowflake account with Hybrid Tables Enabled
-- Account Admin and password which you should use to execute the quickstart
+- Snowflake account with hybrid tables enabled
+- Account Admin credentials which you should use to execute the quickstart
  
 ### Prerequisites
 - Familiarity with the Snowflake Snowsight interface
@@ -50,7 +50,7 @@ To complete this quickstart, attendees need the following:
 
 
 
-## Lab 0: Lab Set Up
+## Lab 0: Lab Setup
 
 Duration: 5 Minutes
 
@@ -386,7 +386,7 @@ Both statements should run successfully.
 
 Duration: 10 Minutes
 
-locking hybrid tables unlike standard tables uses row level locking for update operations. Row Level locking allows for concurrent updates on independent records.
+Locking hybrid tables unlike standard tables uses row level locking for update operations. Row Level locking allows for concurrent updates on independent records.
 In this lab, we will test concurrent updates to different records.
 
 In order to test it we will run concurrent updates on two different records in the hybrid table ORDER_HEADER. We will use the main worksheet "Hybrid Table - QuickStart" we created in lab 0 and will create a new worksheet "Hybrid Table - QuickStart session 2" to simulate a new session. From the "Hybrid Table - QuickStart" worksheet we will start a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, and run an update DML statement. Before running the [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) transaction statement we will open the "Hybrid Table - QuickStart session 2" worksheet and run another update DML statement. finally we will commit the open transaction.
@@ -401,7 +401,7 @@ Rename the Worksheet by clicking on the auto-generated Timestamp name and inputt
 
 ### Step 3.2 Running concurrent updates
 
-First Open "Hybrid Table - QuickStart" worksheet and then select and set MAX_ORDER_ID variable.
+Open "Hybrid Table - QuickStart" worksheet and then select and set MAX_ORDER_ID variable.
 
 ```sql
 -- Lab 4
@@ -456,7 +456,7 @@ UPDATE ORDER_HEADER
 SET order_status = 'COMPLETED'
 WHERE order_id = $MIN_ORDER_ID;
 ```
-Update statement should run successfully.
+The Update statement should run successfully.
 
 Open "Hybrid Table - QuickStart" worksheet and run a commit statement to commit the open transaction.
 
@@ -473,7 +473,7 @@ SELECT * from ORDER_HEADER where order_status = 'COMPLETED';
 ## Lab 4: Consistency 
 Duration: 10 Minutes
 
-In this lab, we will demonstrate a unique feature that shows how we can run natively, easily and effectively multi-statement operation in one consistent atomic transaction across both hybrid and standard table types. 
+In this lab, we will demonstrate a unique feature that shows how we can run natively, easily and effectively multi-statement operations in one consistent atomic transaction across both hybrid and standard table types. 
 
 
 First, we will create a new TRUCK_STANDARD table. Afterward, we'll initiate a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, execute a multi-statement DML to insert a new truck record into both the TRUCK_HYBRID table and the TRUCK_STANDARD standard table, and finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the transaction.
@@ -599,11 +599,11 @@ After executing the join statement, examine and analyze the data in the result s
 
 Duration: 10 Minutes
 
-In this lab, we will demonstrate that the security and governance functionalities that have been applied to the standard table are also exist for the hybrid table. 
+In this lab, we will demonstrate that the security and governance functionalities that have been applied to the standard table also exist for the hybrid table. 
 
 ### Step 6.1 Hybrid Table Access Control and User Management
 
-Role-based access control (RBAC) in Snowflake for hybrid tables is the same as standard tables.
+[Role-based access control (RBAC)](https://docs.snowflake.com/en/user-guide/security-access-control-overview) in Snowflake for hybrid tables is the same as standard tables.
 The purpose of this exercise is to give you a chance to see how you can manage access to hybrid table data in Snowflake by granting privileges to some roles.
 
 First we will create a new HYBRID_QUICKSTART_BI_USER_ROLE role
