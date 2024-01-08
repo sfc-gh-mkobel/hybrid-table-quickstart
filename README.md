@@ -371,8 +371,7 @@ DELETE TRUCK WHERE TRUCK_ID = $NEW_TRUCK_ID;
 The statement should fail and we should receive the following error message:
 "Foreign keys that reference key values still exist."
 
-In order to be able to delete a record referenced by a foreign key constraint you need first to delete the reference record in table ORDER_HEADER and only then delete the referenced by record in table TRUCK.
-To test it run the following statement:
+To successfully delete a record referenced by a foreign key constraint, you must first delete the corresponding reference record in the ORDER_HEADER table. Only after completing this step can you proceed to delete the referenced record in the TRUCK table. To test this, execute the following statement:
 
 ```sql
 DELETE FROM ORDER_HEADER WHERE ORDER_ID = $NEW_ORDER_ID;
