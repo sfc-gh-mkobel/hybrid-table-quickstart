@@ -54,7 +54,7 @@ To complete this quickstart, attendees need the following:
 
 Duration: 5 Minutes
 
-In this part of the lab, we will set up our Snowflake account, create new worksheets, role, database structures and create a Virtual Warehouse that we will use in this lab.
+In this part of the lab, we will setup our Snowflake account, create new worksheets, role, database structures and create a Virtual Warehouse that we will use in this lab.
 
 ### Step 0.1 Creating a Worksheet
 
@@ -64,7 +64,7 @@ Within Worksheets, click the "+" button in the top-right corner of Snowsight and
 
 Rename the Worksheet by clicking on the auto-generated Timestamp name and inputting "Hybrid Table - QuickStart"
 
-### Step 0.2 Set Up
+### Step 0.2 SetUp
 
 #### Create lab objects
 
@@ -221,7 +221,7 @@ insert into ORDER_HEADER (
 ## Lab 1: Explore Data
 Duration: 5 Minutes
 
-In the previous Set Up lab we created HYBRID_QUICKSTART_ROLE role, HYBRID_QUICKSTART_WH warehouse, HYBRID_QUICKSTART_DB database and schema DATA. Let's use them.
+In the previous Setup lab we created HYBRID_QUICKSTART_ROLE role, HYBRID_QUICKSTART_WH warehouse, HYBRID_QUICKSTART_DB database and schema DATA. Let's use them.
 ```sql
 -- Lab 1
 -- Set lab context
@@ -274,7 +274,7 @@ In this part of the lab, we will test Unique and Foreign Keys Constraints.
 
 ### Step 2.1 Unique Constraints
 In this step, we will test Unique Constraint which ensures that all values in a column are different.
-In table TRUCK that we created in the Set Up lab we defined column TRUCK_EMAIL as NOT NULL and UNIQUE.
+In table TRUCK that we created in the Setup lab we defined column TRUCK_EMAIL as NOT NULL and UNIQUE.
 
 
 Display information about the columns in the table. Note the unique key value for the TRUCK_EMAIL column.
@@ -371,7 +371,7 @@ DELETE TRUCK WHERE TRUCK_ID = $NEW_TRUCK_ID;
 The statement should fail and we should receive the following error message:
 "Foreign keys that reference key values still exist."
 
-To successfully delete a record referenced by a foreign key constraint, you must first delete the corresponding reference record in the ORDER_HEADER table. Only after completing this step can you proceed to delete the referenced record in the TRUCK table. To test this, execute the following statement:
+To successfully delete a record referenced by a foreign key constraint, you must first delete the corresponding reference record in the ORDER_HEADER table. Only after completing this step you can proceed to delete the referenced record in the TRUCK table. To test this, execute the following statement:
 
 ```sql
 DELETE FROM ORDER_HEADER WHERE ORDER_ID = $NEW_ORDER_ID;
@@ -565,7 +565,7 @@ In this lab, we will test the join between hybrid and standard tables. We will u
 
 ### Step 5.1 Explore Data 
 
-In the Set Up lab, we already created and loaded data into the ORDER_HEADER tables. Now we can run a few queries and review some information to get familiar with it.
+In the Setup lab, we already created and loaded data into the ORDER_HEADER tables. Now we can run a few queries and review some information to get familiar with it.
 ```sql
 -- Lab 5
 -- Set lab context
