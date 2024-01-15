@@ -403,7 +403,7 @@ Rename the Worksheet by clicking on the auto-generated Timestamp name and inputt
 Open "Hybrid Table - QuickStart" worksheet and then select and set MAX_ORDER_ID variable.
 
 ```sql
--- Lab 4
+-- Lab 3
 -- Set lab context
 USE ROLE HYBRID_QUICKSTART_ROLE;
 USE WAREHOUSE HYBRID_QUICKSTART_WH;
@@ -435,7 +435,7 @@ SHOW TRANSACTIONS;
 Now open the "Hybrid Table - QuickStart session 2" worksheet and then select and set MIN_ORDER_ID variable.
 
 ```sql
--- Lab 4
+-- Lab 3
 -- Set lab context
 USE ROLE HYBRID_QUICKSTART_ROLE;
 USE WAREHOUSE HYBRID_QUICKSTART_WH;
