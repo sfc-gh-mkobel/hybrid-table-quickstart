@@ -46,9 +46,7 @@ To complete this quickstart, attendees need the following:
 ### Prerequisites
 - Familiarity with the Snowflake Snowsight interface
 - Basic experience using git
-- Tasty Bytes V2 Installed on your account. If you don't have it install it by running [V2 Tasty Bytes Foundational Data Model - Setup](https://github.com/snowflakecorp/frostbytes/tree/main/Tasty%20Bytes/20%20-%20setup/V2)
-
-
+- Please make sure you have completed the [Introduction to Tasty Bytes Quickstart](https://quickstarts.snowflake.com/guide/tasty_bytes_introduction/index.html#0) which provides a walkthrough on setting up a trial account and deploying the Tasty Bytes Foundation required to complete this Quickstart.
 
 ## Lab 0: Lab Setup
 
