@@ -102,7 +102,7 @@ USE SCHEMA DATA;
 #### Create Hybrid Table and Bulk Load Data
 
 You may bulk load data into hybrid tables by copying from a data stage or other tables (that is, using CTAS, COPY, or INSERT INTO … SELECT).
-It is strongly recommended to bulk load data into a hybrid table using a CREATE TABLE … AS SELECT statement, as there are several optimizations which can only be applied to a data load as part of table creation. You need to define all keys, indexes, and constraints at the creation of a hybrid table. 
+It is strongly recommended to bulk load data into a hybrid table using a CREATE TABLE … AS SELECT statement, as there are several optimizations which can only be applied to a data load as part of table creation. You need to define all keys, indexes, and constraints at the creation of a hybrid table. Bulk loading via INSERT or COPY is supported, but data loading is slower (could be 10 times slower) for large amounts of data and queries against freshly loaded data will be slower as well. 
 
 This DDL will create a hybrid table TRUCK using CREATE TABLE … AS SELECT statement.
 Note the primary key constraint on the TRUCK_ID column.
