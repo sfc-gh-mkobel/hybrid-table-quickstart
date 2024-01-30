@@ -552,7 +552,6 @@ Set a new truck id variable and run a multi statement transaction.
 SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
 --Increment max truck_id by one
 SET NEW_TRUCK_ID = $MAX_TRUCK_ID+1;
-
 -- Create new unique email address
 SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com');
 
