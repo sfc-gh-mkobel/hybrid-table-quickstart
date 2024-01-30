@@ -285,7 +285,7 @@ select * from ORDER_HEADER limit 10;
 ```
 
 ## Lab 2: Unique and Foreign Keys Constraints
-Duration: 10 Minutes
+Duration: 5 Minutes
 
 In this part of the lab, we will test Unique and Foreign Keys Constraints.
 
@@ -398,7 +398,7 @@ Both statements should run successfully.
 
 ## Lab 3: Row-Level Locking
 
-Duration: 10 Minutes
+Duration: 5 Minutes
 
 Unlike standard tables, which utilize partition or table-level locking, hybrid tables employ row-level locking for update operations.
 Row Level locking allows for concurrent updates on independent records.
