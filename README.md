@@ -25,9 +25,7 @@ Hybrid tables may be suitable for some transactional applications, depending on 
 
 Hybrid tables provide the lower latency and higher throughput for single-row DMLs necessary for these use cases.
 
-In this quickstart, we will use Tasty Bytes Snowflake fictional food truck business data to simulate a data serving use case. We will use two tables:
-- ORDER_HEADER table -  This table stores order metadata such as TRUCK_ID, CUSTOMER_ID, ORDER_AMOUNT, etc.
-- TRUCK table -  This table stores truck metadata such as TRUCK_ID,FRANCHISE_ID,MENU_TYPE_ID, etc.
+In this quickstart, we will use Tasty Bytes Snowflake fictional food truck business data to simulate a data serving use case.
 
 
 ### What You’ll Learn
@@ -50,7 +48,7 @@ To complete this quickstart, attendees need the following:
 
 Duration: 5 Minutes
 
-In this part of the lab, we will setup our Snowflake account, create new worksheets, role, database structures and create a Virtual Warehouse that we will use in this lab.
+In this part of the lab, we will setup our Snowflake account, create new worksheets, role, database structures, create a Virtual Warehouse and create two hybrid tables and one standard table that we will use in this lab.
 
 ### Step 0.1 Creating a Worksheet
 
@@ -97,7 +95,12 @@ USE ROLE HYBRID_QUICKSTART_ROLE;
 USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
 ```
-#### Create Hybrid Table and Bulk Load Data
+#### Create Tables and Bulk Load Data
+
+We will create three tables:
+- ORDER_HEADER Hybrid table -  This  table stores order metadata such as TRUCK_ID, CUSTOMER_ID, ORDER_AMOUNT, etc.
+- TRUCK Hybrid table -  This table stores truck metadata such as TRUCK_ID,FRANCHISE_ID,MENU_TYPE_ID, etc.
+- TRUCK_HISTORY standard table -  This table will store historical TRUCK information, enabling you to track changes over time.
 
 You may bulk load data into hybrid tables by copying from a data stage or other tables (that is, using CTAS, COPY, or INSERT INTO … SELECT).
 It is strongly recommended to bulk load data into a hybrid table using a CREATE TABLE … AS SELECT statement, as there are several optimizations which can only be applied to a data load as part of table creation. You need to define all keys, indexes, and constraints at the creation of a hybrid table. Bulk loading via INSERT or COPY is supported, but data loading is slower compared to CTAS, which could be 10 times faster, for large amounts of data and queries against freshly loaded data will be slower as well.
@@ -108,7 +111,7 @@ First we have to create a [FILE FORMAT](https://docs.snowflake.com/en/sql-refere
 -- Create a CSV file format named CSV_FORMAT
 CREATE OR REPLACE FILE FORMAT CSV_FORMAT TYPE = csv field_delimiter = ',' skip_header = 1 null_if = ('NULL', 'null') empty_field_as_null = true;
 -- Create stage for loading orders data
-create or replace stage FROSTBYTE_TASTY_BYTES_STAGE url = 's3://sfquickstarts/hybrid_table_guide' FILE_FORMAT = CSV_FORMAT;
+CREATE OR REPLACE STAGE FROSTBYTE_TASTY_BYTES_STAGE URL = 's3://sfquickstarts/hybrid_table_guide' FILE_FORMAT = CSV_FORMAT;
 ```
 
 Once we've created the stage lets view using [LIST](https://docs.snowflake.com/en/sql-reference/sql/list?utm_source=snowscope&utm_medium=serp&utm_term=LIST+%40) statement all the files in FROSTBYTE_TASTY_BYTES_STAGE named stage:
@@ -120,10 +123,15 @@ list @FROSTBYTE_TASTY_BYTES_STAGE;
 The statement should return two records: one for the 'TRUCK.csv' file and the second for the 'ORDER_HEADER.csv' file.
 
 Once we've created the Stage which points to where the data resides in cloud storage we can simply load the data using CTAS statement into our TRUCK table.
-This DDL will create a hybrid table TRUCK using CREATE TABLE … AS SELECT statement.
+The first DDL will create a hybrid table TRUCK using CREATE TABLE … AS SELECT statement.
 Note the primary key constraint on the TRUCK_ID column.
+The second DDL will create a standard table TRUCK_HISTORY using CREATE TABLE … AS SELECT statement.
 
 ```sql
+-- current time step
+SET CURRENT_TIMESTAMP_INSERT = CURRENT_TIMESTAMP();
+
+-- The first DDL will create TRUCK hybrid table using CREATE TABLE … AS SELECT statement.
 CREATE OR REPLACE HYBRID TABLE TRUCK (
 	TRUCK_ID NUMBER(38,0) NOT NULL,
 	MENU_TYPE_ID NUMBER(38,0),
@@ -139,6 +147,7 @@ CREATE OR REPLACE HYBRID TABLE TRUCK (
 	EV_FLAG NUMBER(38,0),
 	FRANCHISE_ID NUMBER(38,0),
 	TRUCK_OPENING_DATE DATE,
+        RECORD_START_TIME DATE,
 	TRUCK_EMAIL VARCHAR NOT NULL UNIQUE,
 	primary key (TRUCK_ID) 
 	)
@@ -158,8 +167,53 @@ CREATE OR REPLACE HYBRID TABLE TRUCK (
 	t.$12 AS EV_FLAG,
 	t.$13 AS FRANCHISE_ID,
 	t.$14 AS TRUCK_OPENING_DATE,
+        $CURRENT_TIMESTAMP_INSERT AS RECORD_START_TIME,
+	CONCAT(TRUCK_ID, '_truck@email.com') AS TRUCK_EMAIL
+	FROM @FROSTBYTE_TASTY_BYTES_STAGE (pattern=>'.*TRUCK.csv') t;
+
+-- The second DDL will create TRUCK_HISTORY standard table using CREATE TABLE … AS SELECT statement.
+CREATE OR REPLACE TABLE TRUCK_HISTORY (
+	TRUCK_ID NUMBER(38,0) NOT NULL,
+	MENU_TYPE_ID NUMBER(38,0),
+	PRIMARY_CITY VARCHAR(16777216),
+	REGION VARCHAR(16777216),
+	ISO_REGION VARCHAR(16777216),
+	COUNTRY VARCHAR(16777216),
+	ISO_COUNTRY_CODE VARCHAR(16777216),
+	FRANCHISE_FLAG NUMBER(38,0),
+	YEAR NUMBER(38,0),
+	MAKE VARCHAR(16777216),
+	MODEL VARCHAR(16777216),
+	EV_FLAG NUMBER(38,0),
+	FRANCHISE_ID NUMBER(38,0),
+	TRUCK_OPENING_DATE DATE,
+        RECORD_START_TIME DATE,
+        RECORD_END_TIME DATE,
+	TRUCK_EMAIL VARCHAR NOT NULL UNIQUE,
+	primary key (TRUCK_ID) 
+	)
+	AS
+	SELECT 
+	t.$1 AS TRUCK_ID, 
+	t.$2 AS MENU_TYPE_ID,
+	t.$3 AS PRIMARY_CITY,
+	t.$4 AS REGION,
+	t.$5 AS ISO_REGION,
+	t.$6 AS COUNTRY,
+	t.$7 AS ISO_COUNTRY_CODE,
+	t.$8 AS FRANCHISE_FLAG,
+	t.$9 AS YEAR,
+	t.$10 AS MAKE,
+	t.$11 AS MODEL,
+	t.$12 AS EV_FLAG,
+	t.$13 AS FRANCHISE_ID,
+	t.$14 AS TRUCK_OPENING_DATE,
+        $CURRENT_TIMESTAMP_INSERT AS RECORD_START_TIME,
+        NULL AS RECORD_END_TIME,
 	CONCAT(TRUCK_ID, '_truck@email.com') TRUCK_EMAIL
-	FROM @FROSTBYTE_TASTY_BYTES_STAGE (file_format => 'CSV_FORMAT', pattern=>'TRUCK.csv') t;
+	FROM @FROSTBYTE_TASTY_BYTES_STAGE (pattern=>'.*TRUCK.csv') t;
+
+
 ```
 
 This DDL will create the structure for the ORDER_HEADER hybrid table.
@@ -232,8 +286,9 @@ insert into ORDER_HEADER (
 	t.$15 AS ORDER_DISCOUNT_AMOUNT,
 	t.$16 AS ORDER_TOTAL,
 	'' as ORDER_STATUS 
-	FROM @FROSTBYTE_TASTY_BYTES_STAGE (file_format => 'CSV_FORMAT', pattern=>'ORDER_HEADER.csv') t;
+	FROM @FROSTBYTE_TASTY_BYTES_STAGE (pattern=>'.*ORDER_HEADER.csv') t;
 ```
+
 
 ## Lab 1: Explore Data
 Duration: 5 Minutes
@@ -280,6 +335,8 @@ Look at a sample of the tables.
 ```sql
 -- Simple query to look at 10 rows of data from table TRUCK
 select * from TRUCK limit 10;
+-- Simple query to look at 10 rows of data from table TRUCK_HISTORY
+select * from TRUCK_HISTORY limit 10;
 -- Simple query to look at 10 rows of data from table ORDER_HEADER
 select * from ORDER_HEADER limit 10;
 ```
@@ -488,65 +545,20 @@ SELECT * from ORDER_HEADER where order_status = 'COMPLETED';
 ## Lab 4: Consistency 
 Duration: 10 Minutes
 
-In this lab, we will demonstrate a unique hybrid tables feature that shows how we can run multi-statement operations natively, easily and effectively in one consistent atomic transaction across both hybrid and standard table types. 
+In this lab, we will demonstrate a unique hybrid tables feature that shows how we can run multi-statement operations natively, easily and effectively in one consistent atomic transaction across both hybrid and standard table types.
+
+### Step 4.1 Run Multi Statement Transaction
+
+First We'll initiate a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) to ensure that the series of operations is treated as a single, atomic unit.
+Second We'll execute a multi-statement DML that will:
+- Update the relevant truck record in the TRUCK Hybrid table.
+- Identify and update the corresponding record in the TRUCK_HISTORY table by setting the RECORD_END_TIME to mark the end of its validity.
+- Identify the relevant record in the TRUCK_HISTORY table associated with the record being updated in the TRUCK table and update the RECORD_END_TIME to mark the end of its validity.
+- Create a new record in the TRUCK_HISTORY table, capturing the updated information.
+Finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the transaction.
 
 
-First, we will create a new TRUCK_STANDARD table. Afterward, we'll initiate a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) statement, execute a multi-statement DML to insert a new truck record into both the TRUCK_HYBRID table and the TRUCK_STANDARD standard table, and finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the transaction.
-
-### Step 4.1 Create Table
-
-This DDL will create a standard table TRUCK_STANDARD using CREATE TABLE … AS SELECT statement from hybrid table TRUCK.
-
-```sql
--- Lab 4
--- Set lab context
-USE ROLE HYBRID_QUICKSTART_ROLE;
-USE WAREHOUSE HYBRID_QUICKSTART_WH;
-USE DATABASE HYBRID_QUICKSTART_DB;
-USE SCHEMA DATA;
-
-CREATE OR REPLACE TABLE TRUCK_STANDARD (
-	TRUCK_ID NUMBER(38,0) NOT NULL,
-	MENU_TYPE_ID NUMBER(38,0),
-	PRIMARY_CITY VARCHAR(16777216),
-	REGION VARCHAR(16777216),
-	ISO_REGION VARCHAR(16777216),
-	COUNTRY VARCHAR(16777216),
-	ISO_COUNTRY_CODE VARCHAR(16777216),
-	FRANCHISE_FLAG NUMBER(38,0),
-	YEAR NUMBER(38,0),
-	MAKE VARCHAR(16777216),
-	MODEL VARCHAR(16777216),
-	EV_FLAG NUMBER(38,0),
-	FRANCHISE_ID NUMBER(38,0),
-	TRUCK_OPENING_DATE DATE,
-    TRUCK_EMAIL VARCHAR
-)
-AS
-SELECT 
-TRUCK_ID,
-MENU_TYPE_ID,
-PRIMARY_CITY,
-REGION,
-ISO_REGION,
-COUNTRY,
-ISO_COUNTRY_CODE,
-FRANCHISE_FLAG,
-YEAR,
-MAKE,
-MODEL,
-EV_FLAG,
-FRANCHISE_ID,
-TRUCK_OPENING_DATE,
-TRUCK_EMAIL
-FROM 
-TRUCK;
-```
-
-### Step 4.2 Run Multi Statement Transaction
-
-Set a new truck id variable and run a multi statement transaction.
-
+**TBD**
 
 ```sql
 SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
