@@ -108,7 +108,7 @@ First we have to create a [FILE FORMAT](https://docs.snowflake.com/en/sql-refere
 -- Create a CSV file format named CSV_FORMAT
 CREATE OR REPLACE FILE FORMAT CSV_FORMAT TYPE = csv field_delimiter = ',' skip_header = 1 null_if = ('NULL', 'null') empty_field_as_null = true;
 -- Create stage for loading orders data
-create or replace stage FROSTBYTE_TASTY_BYTES_STAGE url = 'TBD' FILE_FORMAT = CSV_FORMAT;
+create or replace stage FROSTBYTE_TASTY_BYTES_STAGE url = 's3://sfquickstarts/hybrid_table_guide' FILE_FORMAT = CSV_FORMAT;
 ```
 
 Once we've created the stage lets view using [LIST](https://docs.snowflake.com/en/sql-reference/sql/list?utm_source=snowscope&utm_medium=serp&utm_term=LIST+%40) statement all the files in FROSTBYTE_TASTY_BYTES_STAGE named stage:
