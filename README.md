@@ -559,9 +559,6 @@ Second We'll execute a multi-statement DML that will:
 
 Finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the transaction.
 
-
-**TBD**
-
 ```sql
 -- Begins a transaction in the current session.
 begin;
