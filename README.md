@@ -546,14 +546,14 @@ SELECT * from ORDER_HEADER where order_status = 'COMPLETED';
 Duration: 10 Minutes
 
 In this lab, we will demonstrate a unique hybrid tables feature that shows how we can run multi-statement operations natively, easily and effectively in one consistent atomic transaction across both hybrid and standard table types.
+We'll execute a use case involving the update of a record in the TRUCK hybrid Table. As a result of this update, the TRUCK_HISTORY standard table will be promptly updated to track and preserve changes over time. 
 
 ### Step 4.1 Run Multi Statement Transaction
 
 First We'll initiate a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) to ensure that the series of operations is treated as a single, atomic unit.
 Second We'll execute a multi-statement DML that will:
 - Update the relevant truck record in the TRUCK Hybrid table.
-- Identify and update the corresponding record in the TRUCK_HISTORY table by setting the RECORD_END_TIME to mark the end of its validity.
-- Identify the relevant record in the TRUCK_HISTORY table associated with the record being updated in the TRUCK table and update the RECORD_END_TIME to mark the end of its validity.
+- Update the corresponding record in the TRUCK_HISTORY table by setting the RECORD_END_TIME to mark the end of its validity.
 - Create a new record in the TRUCK_HISTORY table, capturing the updated information.
 Finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the transaction.
 
