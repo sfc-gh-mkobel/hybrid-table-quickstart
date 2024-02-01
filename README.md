@@ -542,16 +542,16 @@ SELECT * from ORDER_HEADER where order_status = 'COMPLETED';
 ```
 
 ## Lab 4: Consistency 
-Duration: 10 Minutes
+Duration: 5 Minutes
 
 In this lab, we will demonstrate a unique hybrid tables feature that shows how we can run multi-statement operations natively, easily and effectively in one consistent atomic transaction across both hybrid and standard table types.
-We'll execute a use case where a truck owner acquires a new truck of the same model. Consequently we will have to update the YEAR column for relevant record in the TRUCK hybrid Table to reflect the change. As a result of this update, the TRUCK_HISTORY standard table will be promptly updated to track and preserve changes over time. 
+We'll execute a use case where a truck owner acquires a new truck of the same model. Consequently we will have to update the YEAR column for relevant record in the TRUCK hybrid table to reflect the change. As a result of this update, the TRUCK_HISTORY standard table will be promptly updated to track and preserve changes over time. 
 
 ### Step 4.1 Run Multi Statement Transaction
 
 First We'll initiate a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) to ensure that the series of operations is treated as a single, atomic unit.\
 Second We'll execute a multi-statement DML that will:
-- Update the relevant truck record in the TRUCK Hybrid table.
+- Update the relevant truck record in the TRUCK hybrid table.
 - Update the corresponding record in the TRUCK_HISTORY table by setting the RECORD_END_TIME to mark the end of its validity.
 - Insert a new record in the TRUCK_HISTORY table, capturing the updated information.
 
@@ -563,9 +563,9 @@ Finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the tr
 ```sql
 -- Begins a transaction in the current session.
 begin;
--- Set current timestemp
+-- Set current timestamp. We will use it to set timestamp columns. 
 SET CURRENT_TIMESTAMP = CURRENT_TIMESTAMP();
--- Update the relevant truck record in the TRUCK Hybrid table.
+-- Update YEAR and RECORD_START_TIME columns for the relevant truck record in the TRUCK Hybrid table.
 update TRUCK set YEAR = '2024',RECORD_START_TIME=$CURRENT_TIMESTAMP where TRUCK_ID = 1;
 -- Update the corresponding record in the TRUCK_HISTORY table by setting the RECORD_END_TIME to mark the end of its validity.
 update TRUCK_HISTORY SET RECORD_END_TIME=$CURRENT_TIMESTAMP where TRUCK_ID = 1 and RECORD_END_TIME IS NULL;
