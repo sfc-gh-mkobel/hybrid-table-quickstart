@@ -550,11 +550,12 @@ We'll execute a use case involving the update of a record in the TRUCK hybrid Ta
 
 ### Step 4.1 Run Multi Statement Transaction
 
-First We'll initiate a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) to ensure that the series of operations is treated as a single, atomic unit.
+First We'll initiate a new transaction using the [BEGIN](https://docs.snowflake.com/en/sql-reference/sql/begin) to ensure that the series of operations is treated as a single, atomic unit.\
 Second We'll execute a multi-statement DML that will:
 - Update the relevant truck record in the TRUCK Hybrid table.
 - Update the corresponding record in the TRUCK_HISTORY table by setting the RECORD_END_TIME to mark the end of its validity.
 - Create a new record in the TRUCK_HISTORY table, capturing the updated information.
+
 Finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the transaction.
 
 
