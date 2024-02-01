@@ -129,8 +129,9 @@ The second DDL will create a standard table TRUCK_HISTORY using CREATE TABLE …
 
 ```sql
 -- current time step
-SET CURRENT_TIMESTAMP_INSERT = CURRENT_TIMESTAMP();
+SET CURRENT_TIMESTAMP = CURRENT_TIMESTAMP();
 
+-- The first DDL will create TRUCK hybrid table using CREATE TABLE … AS SELECT statement.
 -- The first DDL will create TRUCK hybrid table using CREATE TABLE … AS SELECT statement.
 CREATE OR REPLACE HYBRID TABLE TRUCK (
 	TRUCK_ID NUMBER(38,0) NOT NULL,
@@ -147,8 +148,8 @@ CREATE OR REPLACE HYBRID TABLE TRUCK (
 	EV_FLAG NUMBER(38,0),
 	FRANCHISE_ID NUMBER(38,0),
 	TRUCK_OPENING_DATE DATE,
-        RECORD_START_TIME DATE,
-	TRUCK_EMAIL VARCHAR NOT NULL UNIQUE,
+    	TRUCK_EMAIL VARCHAR NOT NULL UNIQUE,
+    	RECORD_START_TIME TIMESTAMP,
 	primary key (TRUCK_ID) 
 	)
 	AS
@@ -167,8 +168,8 @@ CREATE OR REPLACE HYBRID TABLE TRUCK (
 	t.$12 AS EV_FLAG,
 	t.$13 AS FRANCHISE_ID,
 	t.$14 AS TRUCK_OPENING_DATE,
-        $CURRENT_TIMESTAMP_INSERT AS RECORD_START_TIME,
-	CONCAT(TRUCK_ID, '_truck@email.com') AS TRUCK_EMAIL
+	CONCAT(TRUCK_ID, '_truck@email.com') TRUCK_EMAIL,
+    	$CURRENT_TIMESTAMP AS RECORD_START_TIME
 	FROM @FROSTBYTE_TASTY_BYTES_STAGE (pattern=>'.*TRUCK.csv') t;
 
 -- The second DDL will create TRUCK_HISTORY standard table using CREATE TABLE … AS SELECT statement.
@@ -187,9 +188,9 @@ CREATE OR REPLACE TABLE TRUCK_HISTORY (
 	EV_FLAG NUMBER(38,0),
 	FRANCHISE_ID NUMBER(38,0),
 	TRUCK_OPENING_DATE DATE,
-        RECORD_START_TIME DATE,
-        RECORD_END_TIME DATE,
-	TRUCK_EMAIL VARCHAR NOT NULL UNIQUE,
+    	TRUCK_EMAIL VARCHAR NOT NULL UNIQUE,
+    	RECORD_START_TIME TIMESTAMP,
+    	RECORD_END_TIME TIMESTAMP,
 	primary key (TRUCK_ID) 
 	)
 	AS
@@ -208,12 +209,10 @@ CREATE OR REPLACE TABLE TRUCK_HISTORY (
 	t.$12 AS EV_FLAG,
 	t.$13 AS FRANCHISE_ID,
 	t.$14 AS TRUCK_OPENING_DATE,
-        $CURRENT_TIMESTAMP_INSERT AS RECORD_START_TIME,
-        NULL AS RECORD_END_TIME,
-	CONCAT(TRUCK_ID, '_truck@email.com') TRUCK_EMAIL
+	CONCAT(TRUCK_ID, '_truck@email.com') TRUCK_EMAIL,
+	$CURRENT_TIMESTAMP AS RECORD_START_TIME,
+	NULL AS RECORD_END_TIME
 	FROM @FROSTBYTE_TASTY_BYTES_STAGE (pattern=>'.*TRUCK.csv') t;
-
-
 ```
 
 This DDL will create the structure for the ORDER_HEADER hybrid table.
@@ -546,7 +545,7 @@ SELECT * from ORDER_HEADER where order_status = 'COMPLETED';
 Duration: 10 Minutes
 
 In this lab, we will demonstrate a unique hybrid tables feature that shows how we can run multi-statement operations natively, easily and effectively in one consistent atomic transaction across both hybrid and standard table types.
-We'll execute a use case involving the update of a record in the TRUCK hybrid Table. As a result of this update, the TRUCK_HISTORY standard table will be promptly updated to track and preserve changes over time. 
+We'll execute a use case where a truck owner acquires a new truck of the same model. Consequently we will have to update the YEAR column for relevant record in the TRUCK hybrid Table to reflect the change. As a result of this update, the TRUCK_HISTORY standard table will be promptly updated to track and preserve changes over time. 
 
 ### Step 4.1 Run Multi Statement Transaction
 
@@ -554,7 +553,7 @@ First We'll initiate a new transaction using the [BEGIN](https://docs.snowflake.
 Second We'll execute a multi-statement DML that will:
 - Update the relevant truck record in the TRUCK Hybrid table.
 - Update the corresponding record in the TRUCK_HISTORY table by setting the RECORD_END_TIME to mark the end of its validity.
-- Create a new record in the TRUCK_HISTORY table, capturing the updated information.
+- Insert a new record in the TRUCK_HISTORY table, capturing the updated information.
 
 Finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the transaction.
 
@@ -562,18 +561,16 @@ Finally, [COMMIT](https://docs.snowflake.com/en/sql-reference/sql/commit) the tr
 **TBD**
 
 ```sql
-SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
---Increment max truck_id by one
-SET NEW_TRUCK_ID = $MAX_TRUCK_ID+1;
--- Create new unique email address
-SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com');
-
 -- Begins a transaction in the current session.
 begin;
--- Insert records both to standard and hybrid table types. 
-insert into TRUCK_STANDARD values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_UNIQUE_EMAIL);
-insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_UNIQUE_EMAIL);
--- Commits an open transaction in the current session.
+-- Set current timestemp
+SET CURRENT_TIMESTAMP = CURRENT_TIMESTAMP();
+-- Update the relevant truck record in the TRUCK Hybrid table.
+update TRUCK set YEAR = '2024',RECORD_START_TIME=$CURRENT_TIMESTAMP where TRUCK_ID = 1;
+-- Update the corresponding record in the TRUCK_HISTORY table by setting the RECORD_END_TIME to mark the end of its validity.
+update TRUCK_HISTORY SET RECORD_END_TIME=$CURRENT_TIMESTAMP where TRUCK_ID = 1 and RECORD_END_TIME IS NULL;
+-- Insert a new record in the TRUCK_HISTORY table, capturing the updated information.
+insert into TRUCK_HISTORY select *,NULL AS RECORD_END_TIME from TRUCK where TRUCK_ID = 1;
 commit;
 ```
 
@@ -582,8 +579,10 @@ commit;
 Now we can run select queries to review the new inserted records.
 
 ```sql
-select * from TRUCK_STANDARD where TRUCK_ID = $NEW_TRUCK_ID;
-select * from TRUCK where TRUCK_ID = $NEW_TRUCK_ID;
+-- Should return two records 
+select * from TRUCK_HISTORY where TRUCK_ID = 1;
+-- Should return one updated record 
+select * from TRUCK where TRUCK_ID = 1;
 ```
 
 ## Lab 5: Hybrid Querying
