@@ -4,28 +4,29 @@
 <!-- ------------------------ -->
 ## Overview
 
-### The Use Case
+### Hybrid Tables
 
-A hybrid table is a new Snowflake table type with a number of characteristics that differentiate it from existing Snowflake tables. Hybrid tables are optimized for:
-- Single-row lookups and DML operations that require very low latency.
-- Enabling high concurrency for those use cases that require high QPS.
+Hybrid tables are a new Snowflake table type that is optimized for hybrid transactional and operational workloads requiring low latency and high throughput on small random point reads and writes. They support some additional features, such as unique and referential integrity constraint enforcement, that are critical for transactional workloads. You can use hybrid tables along with other Snowflake tables and features to power [Unistore workloads](https://www.snowflake.com/en/data-cloud/workloads/unistore/) that bring transactional and analytical data together in a single platform.
 
-With these capabilities, hybrid tables provide improved support for transactional workloads. In a given query, you can specify both hybrid tables and standard Snowflake tables, enabling you to use your transactional and historical analytical data together in Snowflake. You can join hybrid and standard Snowflake tables, copy data between them, and execute atomic transactions across both table types.
+### Use Cases for Hybrid Tables
 
-Use Cases that may benefit from hybrid table features:
+This section lists some of the use cases that may benefit from hybrid table features.
 
-- Application State:
-Applications often require persisting state data. For example, you may need to store the state of a customer session (authentication, activity, etc.) in a user-facing application, or you may want to store the state of an ETL workflow to monitor the status and avoid running the entire workflow again if the workflow fails in the middle.
+#### Application State
 
-- Data Serving:
-There are many use cases where customers want to serve data to their applications and to partners. Examples include ML model feature stores or pre-computed game statistics served to users through an API.
+Applications often require persisting state data. For example, you may need to store the state of a customer session (authentication, activity, etc.) in a user-facing application, or you may want to store the state of an ETL workflow to monitor status and avoid running the entire workflow again if the workflow fails in the middle. Hybrid tables provide the lower latency and higher throughput for single-row DMLs necessary for these use cases.
 
-- Transactional Applications:
+#### Data Serving
+
+There are many use cases where customers want to serve data to their applications and to partners. Examples include ML model feature stores or pre-computed game statistics served to users through an API. Hybrid tables support higher concurrency, higher throughput (queries per second), and lower latency on single-row lookups required for these use cases.
+
+#### Transactional Applications
+
 Hybrid tables may be suitable for some transactional applications, depending on their concurrency, latency, and feature requirements.
 
-Hybrid tables provide the lower latency and higher throughput for single-row DMLs necessary for these use cases.
-
 In this quickstart, we will use Tasty Bytes Snowflake fictional food truck business data to simulate a data serving use case.
+
+
 
 
 ### What You’ll Learn
@@ -97,6 +98,7 @@ USE SCHEMA DATA;
 ```
 #### Create Tables and Bulk Load Data
 
+In this quickstart, we will use Tasty Bytes Snowflake fictional food truck business data to simulate a data serving use case.
 We will create three tables:
 - ORDER_HEADER Hybrid table -  This  table stores order metadata such as TRUCK_ID, CUSTOMER_ID, ORDER_AMOUNT, etc.
 - TRUCK Hybrid table -  This table stores truck metadata such as TRUCK_ID,FRANCHISE_ID,MENU_TYPE_ID, etc.
