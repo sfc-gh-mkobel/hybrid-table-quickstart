@@ -374,7 +374,7 @@ SET TRUCK_EMAIL = (SELECT TRUCK_EMAIL FROM TRUCK LIMIT 1);
 SET MAX_TRUCK_ID = (SELECT MAX(TRUCK_ID) FROM TRUCK);
 --Increment max truck_id by one
 SET NEW_TRUCK_ID = $MAX_TRUCK_ID+1;
-insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$TRUCK_EMAIL);
+insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$TRUCK_EMAIL,CURRENT_TIMESTAMP());
 ```
 Since we configured the column TRUCK_EMAIL in table TRUCK as UNIQUE the statement failed and we should receive the following error message:
 "Duplicate key value violates unique constraint "SYS_INDEX_TRUCK_UNIQUE_TRUCK_EMAIL""
@@ -384,7 +384,7 @@ Now we will create new unique email address and insert a new record to table TRU
 ```sql
 -- Create new unique email address
 SET NEW_UNIQUE_EMAIL = CONCAT($NEW_TRUCK_ID, '_truck@email.com');
-insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_UNIQUE_EMAIL);
+insert into TRUCK values ($NEW_TRUCK_ID,2,'Stockholm','Stockholm län','Stockholm','Sweden','SE',1,2001,'Freightliner','MT45 Utilimaster',0,276,'2020-10-01',$NEW_UNIQUE_EMAIL,CURRENT_TIMESTAMP());
 ```
 Statement should run successfully.
 
@@ -401,7 +401,7 @@ SET MAX_ORDER_ID = (SELECT MAX(ORDER_ID) FROM ORDER_HEADER);
 SET NEW_ORDER_ID = ($MAX_ORDER_ID +1);
 SET NONE_EXIST_TRUCK_ID = -1;
 -- Insert new record to table ORDER_HEADER
-insert into ORDER_HEADER values ($NEW_ORDER_ID,$NONE_EXIST_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
+insert into ORDER_HEADER values ($NEW_ORDER_ID,$NONE_EXIST_TRUCK_ID,6090,0,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
 ```
 The statement should fail and we should receive the following error message:
 
@@ -411,7 +411,7 @@ Now we will use the new NEW_TRUCK_ID variable we used in previous step and inser
 
 ```sql
 -- Insert new record to table ORDER_HEADER
-insert into ORDER_HEADER values ($NEW_ORDER_ID,$NEW_TRUCK_ID,6090,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
+insert into ORDER_HEADER values ($NEW_ORDER_ID,$NEW_TRUCK_ID,6090,0,0,0,'16:00:00','23:00:00','','2022-02-18 21:38:46.000','','USD',17.0000,'','',17.0000,'');
 ```
 
 Statement should run successfully.
@@ -606,7 +606,7 @@ show tables in database hybrid_quickstart_db;
 select "name", "is_hybrid" from table(result_scan(last_query_id()));
 
 -- Simple query to look at 10 rows of data from standard table FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK
-select * from TRUCK_STANDARD limit 10;
+select * from TRUCK_HISTORY limit 10;
 -- Simple query to look at 10 rows of data from hybrid table ORDER_HEADER
 select * from ORDER_HEADER limit 10;
 
@@ -621,7 +621,7 @@ In order to test the join of the hybrid table ORDER_HEADER with the standard tab
 set ORDER_ID = (select order_id from ORDER_HEADER limit 1);
 
 -- Join tables ORDER_STATE_HYBRID and TRUCK_STANDARD
-select HY.*,ST.* from ORDER_HEADER as HY join TRUCK_STANDARD as ST on HY.truck_id = ST.TRUCK_ID where HY.ORDER_ID = $ORDER_ID;
+select HY.*,ST.* from ORDER_HEADER as HY join TRUCK_HISTORY as ST on HY.truck_id = ST.TRUCK_ID where HY.ORDER_ID = $ORDER_ID;
 ```
 
 After executing the join statement, examine and analyze the data in the result set.
