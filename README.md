@@ -6,7 +6,7 @@
 
 ### Hybrid Tables
 
-Hybrid tables are a new Snowflake table type that is optimized for hybrid transactional and operational workloads requiring low latency and high throughput on small random point reads and writes. They support some additional features, such as unique and referential integrity constraint enforcement, that are critical for transactional workloads. You can use hybrid tables along with other Snowflake tables and features to power [Unistore workloads](https://www.snowflake.com/en/data-cloud/workloads/unistore/) that bring transactional and analytical data together in a single platform.
+Hybrid tables are a new Snowflake table type that is optimized for hybrid transactional and operational workloads requiring low latency and high throughput on small random point reads and writes. They support some additional features, such as unique and referential integrity constraints enforcement, that are critical for transactional workloads. You can use hybrid tables along with other Snowflake tables and features to power [Unistore workloads](https://www.snowflake.com/en/data-cloud/workloads/unistore/) that bring transactional and analytical data together in a single platform.
 
 ### Use Cases for Hybrid Tables
 
@@ -107,7 +107,7 @@ We will create three tables:
 You may bulk load data into hybrid tables by copying from a data stage or other tables (that is, using CTAS, COPY, or INSERT INTO … SELECT).
 It is strongly recommended to bulk load data into a hybrid table using a CREATE TABLE … AS SELECT statement, as there are several optimizations which can only be applied to a data load as part of table creation. You need to define all keys, indexes, and constraints at the creation of a hybrid table. Bulk loading via INSERT or COPY is supported, but data loading is slower compared to CTAS, which could be 10 times faster, for large amounts of data and queries against freshly loaded data will be slower as well.
 
-First we have to create a [FILE FORMAT](https://docs.snowflake.com/en/sql-reference/sql/create-file-format) that describes a set of staged data to access or load into Snowflake tables and a [STAGE](https://docs.snowflake.com/en/user-guide/data-load-overview) which is a Snowflake object that points to a cloud storage location Snowflake can access to both ingest and query data. In this lab the data is stored in a publically accessible AWS S3 bucket which we are referencing when creating the Stage object.
+First we have to create a [FILE FORMAT](https://docs.snowflake.com/en/sql-reference/sql/create-file-format) that describes a set of staged data to access or load into Snowflake tables and a [STAGE](https://docs.snowflake.com/en/user-guide/data-load-overview) which is a Snowflake object that points to a cloud storage location Snowflake can access to both ingest and query data. In this lab the data is stored in a publicly accessible AWS S3 bucket which we are referencing when creating the Stage object.
 
 ```sql
 -- Create a CSV file format named CSV_FORMAT
@@ -220,7 +220,7 @@ CREATE OR REPLACE TABLE TRUCK_HISTORY (
 This DDL will create the structure for the ORDER_HEADER hybrid table.
 Note the following:
 - Primary key constraint on ORDER_ID column
-- Foreign key references constraint on column TRUCK_ID from table TRUCK
+- Foreign key references constraints on column TRUCK_ID from table TRUCK
 - secondary indexes on column ORDER_TS
 
 ```sql
