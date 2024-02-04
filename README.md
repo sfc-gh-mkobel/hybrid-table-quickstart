@@ -600,10 +600,17 @@ USE WAREHOUSE HYBRID_QUICKSTART_WH;
 USE DATABASE HYBRID_QUICKSTART_DB;
 USE SCHEMA DATA;
 
+-- Lists the tables for which you have access privileges in hybrid_quickstart_db database
+show tables in database hybrid_quickstart_db;
+-- TBD	
+select "name", "is_hybrid" from table(result_scan(last_query_id()));
+
 -- Simple query to look at 10 rows of data from standard table FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK
 select * from TRUCK_STANDARD limit 10;
 -- Simple query to look at 10 rows of data from hybrid table ORDER_HEADER
 select * from ORDER_HEADER limit 10;
+
+
 ```
 ### Step 5.2 Join Hybrid Table and Standard Table
 
