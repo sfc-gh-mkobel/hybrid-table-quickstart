@@ -134,7 +134,6 @@ The second DDL will create a standard table TRUCK_HISTORY using CREATE TABLE …
 SET CURRENT_TIMESTAMP = CURRENT_TIMESTAMP();
 
 -- The first DDL will create TRUCK hybrid table using CREATE TABLE … AS SELECT statement.
--- The first DDL will create TRUCK hybrid table using CREATE TABLE … AS SELECT statement.
 CREATE OR REPLACE HYBRID TABLE TRUCK (
 	TRUCK_ID NUMBER(38,0) NOT NULL,
 	MENU_TYPE_ID NUMBER(38,0),
