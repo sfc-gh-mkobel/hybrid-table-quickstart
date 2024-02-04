@@ -570,6 +570,7 @@ update TRUCK set YEAR = '2024',RECORD_START_TIME=$CURRENT_TIMESTAMP where TRUCK_
 update TRUCK_HISTORY SET RECORD_END_TIME=$CURRENT_TIMESTAMP where TRUCK_ID = 1 and RECORD_END_TIME IS NULL;
 -- Insert a new record in the TRUCK_HISTORY table, capturing the updated information.
 insert into TRUCK_HISTORY select *,NULL AS RECORD_END_TIME from TRUCK where TRUCK_ID = 1;
+-- commit the transaction
 commit;
 ```
 
