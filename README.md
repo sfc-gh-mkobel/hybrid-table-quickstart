@@ -623,9 +623,9 @@ After executing the join statement, examine and analyze the data in the result s
 
 ## Lab 6: Security / Governance
 
-Duration: 10 Minutes
+Duration: 5 Minutes
 
-In this lab, we will demonstrate that the security and governance functionalities that have been applied to the standard table also exist for the hybrid table. 
+In this lab, we will demonstrate that the security and governance functionalities applied to the standard table also extend to the hybrid table, by running two security use cases. 
 
 ### Step 6.1 Hybrid Table Access Control and User Management
 
