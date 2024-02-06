@@ -294,7 +294,7 @@ insert into ORDER_HEADER (
 
 
 ## Lab 1: Explore Data
-Duration: 5 Minutes
+Duration: 3 Minutes
 
 In the previous Setup lab we created HYBRID_QUICKSTART_ROLE role, HYBRID_QUICKSTART_WH warehouse, HYBRID_QUICKSTART_DB database and schema DATA. Let's use them.
 ```sql
@@ -458,7 +458,7 @@ Both statements should run successfully.
 
 ## Lab 3: Row-Level Locking
 
-Duration: 5 Minutes
+Duration: 4 Minutes
 
 Unlike standard tables, which utilize partition or table-level locking, hybrid tables employ row-level locking for update operations.
 Row Level locking allows for concurrent updates on independent records.
@@ -745,6 +745,9 @@ select * from TRUCK limit 10;
 ```
 
 ## Lab 7: Cleanup
+
+Duration: 1 Minute
+
 To clean up your Snowflake environment you can run the following SQL Statements:
 
 ```sql
