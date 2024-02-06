@@ -224,6 +224,7 @@ Note the following:
 - secondary indexes on column ORDER_TS
 
 ```sql
+-- Creates or replace ORDER_HEADER table
 CREATE OR REPLACE HYBRID TABLE ORDER_HEADER (
 	ORDER_ID NUMBER(38,0) NOT NULL,
 	TRUCK_ID NUMBER(38,0),
@@ -251,6 +252,7 @@ CREATE OR REPLACE HYBRID TABLE ORDER_HEADER (
 This DML will insert data into table ORDER_HEADER using INSERT INTO … SELECT statement
 
 ```sql
+-- This DML will insert data into table ORDER_HEADER using INSERT INTO … SELECT statement
 insert into ORDER_HEADER (
 	ORDER_ID,
 	TRUCK_ID,
