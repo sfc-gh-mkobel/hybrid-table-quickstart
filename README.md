@@ -590,7 +590,7 @@ select * from TRUCK where TRUCK_ID = 1;
 ## Lab 5: Hybrid Querying
 Duration: 5 Minutes
 
-In this lab, we will test the join between hybrid and standard tables. We will use the TRUCK_STANDARD table created in the previous lab and join it with the hybrid table ORDER_HEADER.
+In this step, we will test the join between hybrid and standard tables. We will use the TRUCK_HISTORY table and join it with the hybrid table ORDER_HEADER.
 
 ### Step 5.1 Explore Data 
 
@@ -605,10 +605,10 @@ USE SCHEMA DATA;
 
 -- Lists the tables for which you have access privileges in hybrid_quickstart_db database
 show tables in database hybrid_quickstart_db;
--- TBD	
+-- Select name and is_hybrid columns
 select "name", "is_hybrid" from table(result_scan(last_query_id()));
 
--- Simple query to look at 10 rows of data from standard table FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK
+-- Simple query to look at 10 rows of data from standard table TRUCK_HISTORY
 select * from TRUCK_HISTORY limit 10;
 -- Simple query to look at 10 rows of data from hybrid table ORDER_HEADER
 select * from ORDER_HEADER limit 10;
@@ -617,13 +617,13 @@ select * from ORDER_HEADER limit 10;
 ```
 ### Step 5.2 Join Hybrid Table and Standard Table
 
-In order to test the join of the hybrid table ORDER_HEADER with the standard table FROSTBYTE_TASTY_BYTES.RAW_POS.TRUCK, let's run the join statement.
+In order to test the join of the hybrid table ORDER_HEADER with the standard table TRUCK_HISTORY, let's run the join statement.
 
 ```sql
 -- Set ORDER_ID variable
 set ORDER_ID = (select order_id from ORDER_HEADER limit 1);
 
--- Join tables ORDER_STATE_HYBRID and TRUCK_STANDARD
+-- Join tables ORDER_STATE_HYBRID and TRUCK_HISTORY
 select HY.*,ST.* from ORDER_HEADER as HY join TRUCK_HISTORY as ST on HY.truck_id = ST.TRUCK_ID where HY.ORDER_ID = $ORDER_ID;
 ```
 
